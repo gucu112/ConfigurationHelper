@@ -16,6 +16,13 @@ namespace ConfigurationHelperTest
         }
 
         [Fact]
+        public void DataSettings()
+        {
+            Assert.Equal(Config.DataSettings,
+                ConfigurationManager.GetSection("dataSettings"));
+        }
+
+        [Fact]
         public void ConnectionStringsTest()
         {
             Assert.Equal(Config.ConnectionStrings,

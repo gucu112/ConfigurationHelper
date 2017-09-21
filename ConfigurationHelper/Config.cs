@@ -18,6 +18,15 @@ namespace ConfigurationHelper
             }
         }
 
+        public static NameValueCollection DataSettings
+        {
+            get
+            {
+                return (NameValueCollection)
+                    ConfigurationManager.GetSection("dataSettings");
+            }
+        }
+
         public static ConnectionStringSettingsCollection ConnectionStrings
         {
             get
