@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Project-specific files
+/ConfigurationHelperTest/app.config
+/ConfigurationRunner/app.linq
+
 # User-specific files
 *.suo
 *.user

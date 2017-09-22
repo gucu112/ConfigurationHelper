@@ -18,6 +18,8 @@ namespace ConfigurationHelper
             }
         }
 
+        public static NameValueCollection AppData => DataSettings;
+
         public static NameValueCollection DataSettings
         {
             get
