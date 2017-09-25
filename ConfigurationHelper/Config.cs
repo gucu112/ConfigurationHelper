@@ -10,6 +10,12 @@ namespace ConfigurationHelper
 {
     public static class Config
     {
+        /// <summary>
+        /// Gets the application settings.
+        /// </summary>
+        /// <value>
+        /// The application settings object.
+        /// </value>
         public static NameValueCollection AppSettings
         {
             get
@@ -18,8 +24,20 @@ namespace ConfigurationHelper
             }
         }
 
+        /// <summary>
+        /// Gets the application data (alias for data settings).
+        /// </summary>
+        /// <value>
+        /// The data settings object.
+        /// </value>
         public static NameValueCollection AppData => DataSettings;
 
+        /// <summary>
+        /// Gets the data settings.
+        /// </summary>
+        /// <value>
+        /// The data settings object.
+        /// </value>
         public static NameValueCollection DataSettings
         {
             get
@@ -29,6 +47,12 @@ namespace ConfigurationHelper
             }
         }
 
+        /// <summary>
+        /// Gets the connection strings.
+        /// </summary>
+        /// <value>
+        /// The connection strings.
+        /// </value>
         public static ConnectionStringSettingsCollection ConnectionStrings
         {
             get

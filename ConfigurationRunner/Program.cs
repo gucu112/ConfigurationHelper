@@ -1,11 +1,14 @@
 ﻿using ConfigurationHelper;
+using ConfigurationHelper.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConfigurationRunner
@@ -14,21 +17,38 @@ namespace ConfigurationRunner
     {
         static void Main(string[] args)
         {
+            // Change current culture
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(Config.AppSettings["DefaultCulture"]);
+            // Run program examples
             ProgramExamples.GetConfigSetting();
             ProgramExamples.GetByteCodeKey();
             ProgramExamples.DatabaseConnection();
+            ProgramExamples.GetCastedValue();
+#if DEBUG
+            // Wait 3 seconds while debugging
+            Thread.Sleep(3000);
+#else
+            // Wait for user input
+            Console.Write("Press any key to continue...");
             Console.ReadKey();
+#endif
         }
     }
 
     public class ProgramExamples
     {
+        /// <summary>
+        /// Gets the configuration setting.
+        /// </summary>
         public static void GetConfigSetting()
         {
             var test = Config.AppSettings["TestString"];
             Console.WriteLine(test);
         }
 
+        /// <summary>
+        /// Gets the byte code key.
+        /// </summary>
         public static void GetByteCodeKey()
         {
             var data64 = Config.AppData["Data64Value"];
@@ -36,6 +56,9 @@ namespace ConfigurationRunner
                 .Aggregate((str, b) => $"{str}{(char)int.Parse(b)}"));
         }
 
+        /// <summary>
+        /// Establishes connection to the database.
+        /// </summary>
         public static void DatabaseConnection()
         {
             using (var connection = new SqlConnection
@@ -63,6 +86,16 @@ namespace ConfigurationRunner
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the casted value.
+        /// </summary>
+        public static void GetCastedValue()
+        {
+            var amount = Config.AppData.Get<float>("DataFloat");
+            var currency = Config.AppSettings.Get<char>("TestChar");
+            Console.WriteLine($"{amount:0.#}{currency}");
         }
     }
 }
