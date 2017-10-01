@@ -1,24 +1,22 @@
 ﻿using ConfigurationHelper;
 using ConfigurationHelper.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ConfigurationRunner
 {
     class Program
     {
+        #region Main method
+
         static void Main(string[] args)
         {
             // Change current culture
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(Config.AppSettings["DefaultCulture"]);
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(Config.AppSettings.Get("DefaultCulture"));
             // Run program examples
             ProgramExamples.GetConfigSetting();
             ProgramExamples.GetByteCodeKey();
@@ -33,10 +31,14 @@ namespace ConfigurationRunner
             Console.ReadKey();
 #endif
         }
+
+        #endregion
     }
 
     public class ProgramExamples
     {
+        #region Public methods
+
         /// <summary>
         /// Gets the configuration setting.
         /// </summary>
@@ -51,7 +53,7 @@ namespace ConfigurationRunner
         /// </summary>
         public static void GetByteCodeKey()
         {
-            var data64 = Config.AppData["Data64Value"];
+            var data64 = Config.AppData.Get("Data64Value");
             Console.WriteLine(data64.Split(' ')
                 .Aggregate((str, b) => $"{str}{(char)int.Parse(b)}"));
         }
@@ -97,5 +99,7 @@ namespace ConfigurationRunner
             var currency = Config.AppSettings.Get<char>("TestChar");
             Console.WriteLine($"{amount:0.#}{currency}");
         }
+
+        #endregion
     }
 }

@@ -1,17 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using Xunit;
 
 namespace ConfigurationHelperTest
 {
     public static class ConfigTestData
     {
+        #region Private fields
+
         /// <summary>
         /// The built in types
         /// </summary>
         private static IEnumerable<object[]> _builtInTypes;
+
+        #endregion
+
+        #region Public constructor
+
+        /// <summary>
+        /// Initializes the <see cref="ConfigTestData"/> class.
+        /// </summary>
+        static ConfigTestData()
+        {
+            _builtInTypes = GetBuiltInTypes();
+        }
+
+        #endregion
+
+        #region Public fields
 
         /// <summary>
         /// Gets the built in types.
@@ -21,13 +37,9 @@ namespace ConfigurationHelperTest
         /// </value>
         public static IEnumerable<object[]> BuiltInTypes => _builtInTypes;
 
-        /// <summary>
-        /// Initializes the <see cref="ConfigTestData"/> class.
-        /// </summary>
-        static ConfigTestData()
-        {
-            _builtInTypes = GetBuiltInTypes();
-        }
+        #endregion
+
+        #region Private methods
 
         /// <summary>
         /// Gets the built in types.
@@ -132,5 +144,7 @@ namespace ConfigurationHelperTest
                     return new object[] { null };
             }
         }
+
+        #endregion
     }
 }
