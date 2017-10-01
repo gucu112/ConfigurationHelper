@@ -2,7 +2,6 @@
 using ConfigurationHelper.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +12,8 @@ namespace ConfigurationHelperTest
 {
     public class ProgramTest
     {
+        #region Public constructor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProgramTest"/> class.
         /// </summary>
@@ -21,13 +22,17 @@ namespace ConfigurationHelperTest
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
 
+        #endregion
+
+        #region Public methods
+
         /// <summary>
         /// Tests the applications settings object.
         /// </summary>
         [Fact]
         public void AppSettingsTest()
         {
-            Assert.Equal(Config.AppSettings["TestString"], "pq9u35b");
+            Assert.Equal("pq9u35b", Config.AppSettings.Get("TestString"));
         }
 
         /// <summary>
@@ -46,9 +51,10 @@ namespace ConfigurationHelperTest
         [InlineData(typeof(long), "TestLong", 4294967296)]
         public void AppSettingsGenericTest(Type type, string key, object value)
         {
-            object invokedValue = typeof(NameValueCollectionExtensions).GetMethod("Get")
+            object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
+                .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
                 .MakeGenericMethod(type).Invoke(null, new object[] { Config.AppSettings, key });
-            Assert.Equal(invokedValue, Convert.ChangeType(value, type));
+            Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 
         /// <summary>
@@ -57,8 +63,8 @@ namespace ConfigurationHelperTest
         [Fact]
         public void DataSettingsTest()
         {
-            Assert.Equal(Config.DataSettings["Data64Value"], "64 63 54 67 54 84");
-            Assert.Equal(Config.AppData["Data64Value"], "64 63 54 67 54 84");
+            Assert.Equal("64 63 54 67 54 84", Config.DataSettings.Get("Data64Value"));
+            Assert.Equal("64 63 54 67 54 84", Config.AppData.Get("Data64Value"));
         }
 
         /// <summary>
@@ -77,11 +83,12 @@ namespace ConfigurationHelperTest
         [InlineData(typeof(long), "DataLong", -4294967296)]
         public void DataSettingsGenericTest(Type type, string key, object value)
         {
-            MethodInfo genericMethod = typeof(NameValueCollectionExtensions).GetMethod("Get").MakeGenericMethod(type);
-            object invokedByDataSettingsValue = genericMethod.Invoke(null, new object[] { Config.DataSettings, key });
-            object invokedByDataAliasValue = genericMethod.Invoke(null, new object[] { Config.AppData, key });
-            Assert.Equal(invokedByDataSettingsValue, Convert.ChangeType(value, type));
-            Assert.Equal(invokedByDataAliasValue, Convert.ChangeType(value, type));
+            MethodInfo genericMethodGet = typeof(KeyValueConfigurationCollectionExtensions).GetMethods()
+                .Single(method => method.Name == "Get" && method.IsGenericMethod).MakeGenericMethod(type);
+            object invokedByDataSettingsValue = genericMethodGet.Invoke(null, new object[] { Config.DataSettings, key });
+            object invokedByDataAliasValue = genericMethodGet.Invoke(null, new object[] { Config.AppData, key });
+            Assert.Equal(Convert.ChangeType(value, type), invokedByDataSettingsValue);
+            Assert.Equal(Convert.ChangeType(value, type), invokedByDataAliasValue);
         }
 
         /// <summary>
@@ -90,18 +97,20 @@ namespace ConfigurationHelperTest
         [Fact]
         public void ConnectionStringsSettingsTest()
         {
-            Assert.Equal(Config.ConnectionStrings["DatabaseConnectionString"].Name,
-                "DatabaseConnectionString");
-            Assert.Equal(Config.ConnectionStrings["DatabaseConnectionString"].ProviderName,
-                "System.Data.SqlClient");
+            Assert.Equal("DatabaseConnectionString",
+                Config.ConnectionStrings["DatabaseConnectionString"].Name);
+            Assert.Equal("System.Data.SqlClient",
+                Config.ConnectionStrings["DatabaseConnectionString"].ProviderName);
             var connectionString = Config.ConnectionStrings["DatabaseConnectionString"].ConnectionString
                 .Split(';').Where(attr => !string.IsNullOrEmpty(attr)).Select(attr => new KeyValuePair<string, string>
                 (attr.Split('=')[0], attr.Split('=')[1])).ToDictionary(e => e.Key, e => e.Value);
-            Assert.Equal(connectionString["Data Source"], @".\SQLEXPRESS");
-            Assert.Equal(connectionString["Initial Catalog"], "DatabaseName");
-            Assert.Equal(Convert.ToInt32(connectionString["Connect Timeout"]), 3);
-            Assert.Equal(Convert.ToBoolean(connectionString["Integrated Security"]), true);
-            Assert.Equal(Convert.ToBoolean(connectionString["MultipleActiveResultSets"]), true);
+            Assert.Equal(@".\SQLEXPRESS", connectionString["Data Source"]);
+            Assert.Equal("DatabaseName", connectionString["Initial Catalog"]);
+            Assert.Equal(3, Convert.ToInt32(connectionString["Connect Timeout"]));
+            Assert.True(Convert.ToBoolean(connectionString["Integrated Security"]));
+            Assert.True(Convert.ToBoolean(connectionString["MultipleActiveResultSets"]));
         }
+
+        #endregion
     }
 }

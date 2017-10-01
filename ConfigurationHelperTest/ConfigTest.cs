@@ -10,14 +10,19 @@ namespace ConfigurationHelperTest
 {
     public class ConfigTest
     {
+        #region Public methods
+
         /// <summary>
         /// Tests the applications settings object.
         /// </summary>
         [Fact]
         public void AppSettingsTest()
         {
-            Assert.Equal(Config.AppSettings,
-                ConfigurationManager.AppSettings);
+            foreach (var element in Config.AppSettings.ToDictionary())
+            {
+                Assert.Equal(ConfigurationManager.AppSettings[element.Key],
+                    element.Value);
+            }
         }
 
         /// <summary>
@@ -26,10 +31,26 @@ namespace ConfigurationHelperTest
         [Fact]
         public void DataSettingsTest()
         {
-            Assert.Equal(Config.DataSettings,
-                ConfigurationManager.GetSection("dataSettings"));
-            Assert.Equal(Config.AppData,
-                ConfigurationManager.GetSection("dataSettings"));
+            var configurationManagerDataSettings = ((AppSettingsSection)
+                ConfigurationManager.GetSection("dataSettings"))?.Settings;
+            if (configurationManagerDataSettings == null)
+            {
+                Assert.Empty(Config.DataSettings.ToDictionary());
+                Assert.Empty(Config.AppData.ToDictionary());
+            }
+            else
+            {
+                foreach (var element in Config.DataSettings.ToDictionary())
+                {
+                    Assert.Equal(configurationManagerDataSettings[element.Key].Value,
+                        element.Value);
+                }
+                foreach (var element in Config.AppData.ToDictionary())
+                {
+                    Assert.Equal(configurationManagerDataSettings[element.Key].Value,
+                        element.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -38,8 +59,8 @@ namespace ConfigurationHelperTest
         [Fact]
         public void ConnectionStringsTest()
         {
-            Assert.Equal(Config.ConnectionStrings,
-                ConfigurationManager.ConnectionStrings);
+            Assert.Equal(ConfigurationManager.ConnectionStrings,
+                Config.ConnectionStrings);
         }
 
         /// <summary>
@@ -53,19 +74,22 @@ namespace ConfigurationHelperTest
         {
             if (type == typeof(object))
             {
-                Assert.True(value.Equals(Convert.ChangeType(value, type)));
+                var convertedValue = Convert.ChangeType(value, type);
+                Assert.True(value.Equals(convertedValue));
             }
             else if (value != null)
             {
-                MethodInfo privateMethod = typeof(NameValueCollectionExtensions)
+                MethodInfo privateMethodCanChangeType = typeof(KeyValueConfigurationCollectionExtensions)
                     .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Static);
-                object invokedValue = privateMethod.Invoke(null, new object[] { value, type });
-                Assert.Equal(invokedValue, true);
+                var canChangeValue = (bool)privateMethodCanChangeType.Invoke(null, new object[] { value, type });
+                Assert.True(canChangeValue);
             }
             else
             {
                 Assert.Null(value);
             }
         }
+
+        #endregion
     }
 }
