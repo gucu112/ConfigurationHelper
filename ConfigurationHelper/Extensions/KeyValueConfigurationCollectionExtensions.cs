@@ -27,7 +27,7 @@ namespace ConfigurationHelper.Extensions
             {
                 throw new ArgumentException($"Configuration value for '{key}' key does not exists.", "key");
             }
-            return collection[key].Value;
+            return Environment.ExpandEnvironmentVariables(collection[key].Value);
         }
 
         /// <summary>
@@ -42,19 +42,12 @@ namespace ConfigurationHelper.Extensions
         /// <exception cref="Exception">Cannot convert to specified type.</exception>
         public static T Get<T>(this KeyValueConfigurationCollection collection, string key)
         {
-            if (collection == null)
-            {
-                throw new ArgumentNullException("collection", "Collection cannot be null.");
-            }
-            if (collection[key] == null)
-            {
-                throw new ArgumentException($"Configuration value for '{key}' key does not exists.", "key");
-            }
-            if (!CanChangeType(collection[key].Value, typeof(T)))
+            var value = collection.Get(key);
+            if (!CanChangeType(value, typeof(T)))
             {
                 throw new Exception($"Cannot convert to '{typeof(T).ToString()}' type.");
             }
-            return (T)Convert.ChangeType(collection[key].Value, typeof(T));
+            return (T)Convert.ChangeType(value, typeof(T));
         }
 
         /// <summary>
@@ -69,7 +62,7 @@ namespace ConfigurationHelper.Extensions
                 return new Dictionary<string, string>();
             }
             return collection.AllKeys.ToDictionary
-                (key => key, key => collection[key].Value);
+                (key => key, key => collection.Get(key));
         }
 
         #endregion

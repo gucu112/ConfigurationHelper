@@ -20,6 +20,8 @@ namespace ConfigurationHelperTest
         public ProgramTest()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Environment.SetEnvironmentVariable("ENV", "development");
+            Environment.SetEnvironmentVariable("DATA_DIR", "test");
         }
 
         #endregion
@@ -109,6 +111,30 @@ namespace ConfigurationHelperTest
             Assert.Equal(3, Convert.ToInt32(connectionString["Connect Timeout"]));
             Assert.True(Convert.ToBoolean(connectionString["Integrated Security"]));
             Assert.True(Convert.ToBoolean(connectionString["MultipleActiveResultSets"]));
+        }
+
+        /// <summary>
+        /// Tests expanding of the application settings by environment variables.
+        /// </summary>
+        [Fact]
+        public void ExpandAppSettingsByEnvironmentVariablesTest()
+        {
+            Assert.Equal("development", Config.AppSettings.Get("ApplicationEnvironment"));
+            Environment.SetEnvironmentVariable("ENV", "test");
+            Assert.Equal("test", Config.AppSettings.Get("ApplicationEnvironment"));
+        }
+
+        /// <summary>
+        /// Expands the data settings by environment variables test.
+        /// </summary>
+        [Fact]
+        public void ExpandDataSettingsByEnvironmentVariablesTest()
+        {
+            Assert.Equal(@"C:\Data\test", Config.DataSettings.Get("DataFolder"));
+            Assert.Equal(@"C:\Data\test", Config.AppData.Get("DataFolder"));
+            Environment.SetEnvironmentVariable("DATA_DIR", "data");
+            Assert.Equal(@"C:\Data\data", Config.DataSettings.Get("DataFolder"));
+            Assert.Equal(@"C:\Data\data", Config.AppData.Get("DataFolder"));
         }
 
         #endregion
