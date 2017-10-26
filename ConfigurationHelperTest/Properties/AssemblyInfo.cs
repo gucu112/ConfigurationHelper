@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ConfigurationHelperTest")]
+[assembly: AssemblyProduct("Gucu112.ConfigurationHelper.Test")]
 [assembly: AssemblyCopyright("Copyright © Gucu112 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("en")]
