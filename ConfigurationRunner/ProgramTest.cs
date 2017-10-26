@@ -1,5 +1,5 @@
-﻿using ConfigurationHelper;
-using ConfigurationHelper.Extensions;
+﻿using Gucu112.ConfigurationHelper;
+using Gucu112.ConfigurationHelper.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using Xunit;
 
-namespace ConfigurationHelperTest
+namespace ConfigurationHelper.Test
 {
     public class ProgramTest
     {

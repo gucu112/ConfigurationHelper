@@ -7,9 +7,9 @@
     <ProjectGuid>{380DD853-C162-4623-96EE-FD56C7FFBCF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigurationHelper</RootNamespace>
+    <RootNamespace>Gucu112.ConfigurationHelper</RootNamespace>
     <AssemblyName>ConfigurationHelper</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>

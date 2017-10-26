@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConfigurationHelperTest
+namespace ConfigurationHelper.Test
 {
     public static class ConfigTestData
     {

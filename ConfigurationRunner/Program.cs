@@ -1,5 +1,4 @@
-﻿using ConfigurationHelper;
-using ConfigurationHelper.Extensions;
+﻿using Gucu112.ConfigurationHelper.Extensions;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 
-namespace ConfigurationRunner
+namespace Gucu112.ConfigurationHelper.Runner
 {
     class Program
     {

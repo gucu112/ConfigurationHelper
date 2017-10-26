@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
-namespace ConfigurationHelper.Extensions
+namespace Gucu112.ConfigurationHelper.Extensions
 {
     public static class KeyValueConfigurationCollectionExtensions
     {

@@ -1,12 +1,12 @@
-﻿using ConfigurationHelper;
-using ConfigurationHelper.Extensions;
+﻿using Gucu112.ConfigurationHelper;
+using Gucu112.ConfigurationHelper.Extensions;
 using System;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using Xunit;
 
-namespace ConfigurationHelperTest
+namespace ConfigurationHelper.Test
 {
     public class ConfigTest
     {

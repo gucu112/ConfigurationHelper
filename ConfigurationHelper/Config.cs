@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace ConfigurationHelper
+namespace Gucu112.ConfigurationHelper
 {
     public static class Config
     {

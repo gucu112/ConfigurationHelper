@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ConfigurationRunner")]
+[assembly: AssemblyProduct("Gucu112.ConfigurationHelper.Runner")]
 [assembly: AssemblyCopyright("Copyright © Gucu112 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
