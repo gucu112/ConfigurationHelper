@@ -35,6 +35,7 @@ namespace ConfigurationHelperTest
         public void AppSettingsTest()
         {
             Assert.Equal("pq9u35b", Config.AppSettings.Get("TestString"));
+            Assert.Equal("pq9u35b", Config.AppSettings["TestString"].Value);
         }
 
         /// <summary>
@@ -66,7 +67,9 @@ namespace ConfigurationHelperTest
         public void DataSettingsTest()
         {
             Assert.Equal("64 63 54 67 54 84", Config.DataSettings.Get("Data64Value"));
+            Assert.Equal("64 63 54 67 54 84", Config.DataSettings["Data64Value"].Value);
             Assert.Equal("64 63 54 67 54 84", Config.AppData.Get("Data64Value"));
+            Assert.Equal("64 63 54 67 54 84", Config.AppData["Data64Value"].Value);
         }
 
         /// <summary>
@@ -120,8 +123,12 @@ namespace ConfigurationHelperTest
         public void ExpandAppSettingsByEnvironmentVariablesTest()
         {
             Assert.Equal("development", Config.AppSettings.Get("ApplicationEnvironment"));
+            Assert.Equal("development", Environment.ExpandEnvironmentVariables
+                (Config.AppSettings["ApplicationEnvironment"].Value));
             Environment.SetEnvironmentVariable("ENV", "test");
             Assert.Equal("test", Config.AppSettings.Get("ApplicationEnvironment"));
+            Assert.Equal("test", Environment.ExpandEnvironmentVariables
+                (Config.AppSettings["ApplicationEnvironment"].Value));
         }
 
         /// <summary>
@@ -131,10 +138,12 @@ namespace ConfigurationHelperTest
         public void ExpandDataSettingsByEnvironmentVariablesTest()
         {
             Assert.Equal(@"C:\Data\test", Config.DataSettings.Get("DataFolder"));
-            Assert.Equal(@"C:\Data\test", Config.AppData.Get("DataFolder"));
+            Assert.Equal(@"C:\Data\test", Environment.ExpandEnvironmentVariables
+                (Config.AppData["DataFolder"].Value));
             Environment.SetEnvironmentVariable("DATA_DIR", "data");
             Assert.Equal(@"C:\Data\data", Config.DataSettings.Get("DataFolder"));
-            Assert.Equal(@"C:\Data\data", Config.AppData.Get("DataFolder"));
+            Assert.Equal(@"C:\Data\data", Environment.ExpandEnvironmentVariables
+                (Config.AppData["DataFolder"].Value));
         }
 
         #endregion

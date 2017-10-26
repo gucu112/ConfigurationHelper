@@ -44,7 +44,7 @@ namespace ConfigurationRunner
         /// </summary>
         public static void GetConfigSetting()
         {
-            var test = Config.AppSettings["TestString"];
+            var test = Config.AppSettings["TestString"].Value;
             Console.WriteLine(test);
         }
 
@@ -53,7 +53,7 @@ namespace ConfigurationRunner
         /// </summary>
         public static void GetByteCodeKey()
         {
-            var data64 = Config.AppData.Get("Data64Value");
+            var data64 = Config.DataSettings.Get("Data64Value");
             Console.WriteLine(data64.Split(' ')
                 .Aggregate((str, b) => $"{str}{(char)int.Parse(b)}"));
         }
@@ -95,7 +95,7 @@ namespace ConfigurationRunner
         /// </summary>
         public static void GetCastedValue()
         {
-            var amount = Config.AppData.Get<float>("DataFloat");
+            var amount = Config.DataSettings.Get<float>("DataFloat");
             var currency = Config.AppSettings.Get<char>("TestChar");
             Console.WriteLine($"{amount:0.#}{currency}");
         }
