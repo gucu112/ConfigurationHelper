@@ -45,6 +45,10 @@
     <Compile Include="Config.cs" />
     <Compile Include="Extensions\KeyValueConfigurationCollectionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sections\AppData\AppDataCollection.cs" />
+    <Compile Include="Sections\AppData\AppDataElement.cs" />
+    <Compile Include="Sections\AppData\AppDataInnerCollection.cs" />
+    <Compile Include="Sections\AppData\AppDataSection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

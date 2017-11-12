@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using Gucu112.ConfigurationHelper.Sections.AppData;
+using System.Configuration;
 
 namespace Gucu112.ConfigurationHelper
 {
@@ -22,6 +23,11 @@ namespace Gucu112.ConfigurationHelper
         private static AppSettingsSection _dataSettingsSection;
 
         /// <summary>
+        /// The application data section.
+        /// </summary>
+        private static AppDataSection _appDataSection;
+
+        /// <summary>
         /// The connection strings section.
         /// </summary>
         private static ConnectionStringsSection _connectionStringsSection;
@@ -40,6 +46,8 @@ namespace Gucu112.ConfigurationHelper
             _appSettingsSection = _config.AppSettings;
             _dataSettingsSection = (AppSettingsSection)
                 _config.GetSection("dataSettings");
+            _appDataSection = (AppDataSection)
+                _config.GetSection("appData");
             _connectionStringsSection = _config.ConnectionStrings;
         }
 
@@ -62,7 +70,7 @@ namespace Gucu112.ConfigurationHelper
         /// Gets the application settings.
         /// </summary>
         /// <value>
-        /// The application settings key-value collection.
+        /// The application settings key/value collection.
         /// </value>
         public static KeyValueConfigurationCollection AppSettings
         {
@@ -84,7 +92,7 @@ namespace Gucu112.ConfigurationHelper
         /// Gets the data settings.
         /// </summary>
         /// <value>
-        /// The data settings as the key-value collection.
+        /// The data settings as the key/value collection.
         /// </value>
         public static KeyValueConfigurationCollection DataSettings
         {
@@ -97,15 +105,21 @@ namespace Gucu112.ConfigurationHelper
         /// <value>
         /// The application data section.
         /// </value>
-        public static AppSettingsSection AppDataSection => DataSettingsSection;
+        public static AppDataSection AppDataSection
+        {
+            get => _appDataSection;
+        }
 
         /// <summary>
         /// Gets the application data.
         /// </summary>
         /// <value>
-        /// The application data as the key-value collection.
+        /// The application data as the key/value collection.
         /// </value>
-        public static KeyValueConfigurationCollection AppData => DataSettings;
+        public static KeyValueConfigurationCollection AppData
+        {
+            get => _appDataSection?.Settings;
+        }
 
         /// <summary>
         /// Gets the connection strings section.

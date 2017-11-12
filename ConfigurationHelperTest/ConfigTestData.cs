@@ -62,7 +62,9 @@ namespace ConfigurationHelper.Test
         /// Gets the built in type example values.
         /// </summary>
         /// <param name="typeCode">The type code.</param>
-        /// <returns>The array of objects containing built in type example values.</returns>
+        /// <returns>
+        /// The array of objects containing built in type example values.
+        /// </returns>
         private static object[] GetBuiltInTypeExampleValues(TypeCode typeCode)
         {
             var randomize = new Random();
