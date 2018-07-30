@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://github.com/gucu112/ConfigurationHelper/raw/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/gucu112/ConfigurationHelper</projectUrl>
+    <iconUrl>http://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright (c) Gucu112 2017-2018 Bartlomiej Roszczypala</copyright>
+    <tags>config configuration configuration-management csharp dotnet dot-net</tags>
+  </metadata>
+</package>

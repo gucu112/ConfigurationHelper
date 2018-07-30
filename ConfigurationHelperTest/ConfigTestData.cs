@@ -11,7 +11,7 @@ namespace ConfigurationHelper.Test
         /// <summary>
         /// The built in types
         /// </summary>
-        private static IEnumerable<object[]> _builtInTypes;
+        private static IEnumerable<object[]> builtInTypes;
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace ConfigurationHelper.Test
         /// </summary>
         static ConfigTestData()
         {
-            _builtInTypes = GetBuiltInTypes();
+            builtInTypes = GetBuiltInTypes();
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace ConfigurationHelper.Test
         /// <value>
         /// The built in types.
         /// </value>
-        public static IEnumerable<object[]> BuiltInTypes => _builtInTypes;
+        public static IEnumerable<object[]> BuiltInTypes => builtInTypes;
 
         #endregion
 

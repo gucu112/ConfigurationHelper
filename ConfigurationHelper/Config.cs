@@ -10,27 +10,27 @@ namespace Gucu112.ConfigurationHelper
         /// <summary>
         /// The configuration.
         /// </summary>
-        private static Configuration _config;
+        private static Configuration config;
 
         /// <summary>
         /// The application settings section.
         /// </summary>
-        private static AppSettingsSection _appSettingsSection;
+        private static AppSettingsSection appSettingsSection;
 
         /// <summary>
         /// The data settings section.
         /// </summary>
-        private static AppSettingsSection _dataSettingsSection;
+        private static AppSettingsSection dataSettingsSection;
 
         /// <summary>
         /// The application data section.
         /// </summary>
-        private static AppDataSection _appDataSection;
+        private static AppDataSection appDataSection;
 
         /// <summary>
         /// The connection strings section.
         /// </summary>
-        private static ConnectionStringsSection _connectionStringsSection;
+        private static ConnectionStringsSection connectionStringsSection;
 
         #endregion
 
@@ -41,14 +41,14 @@ namespace Gucu112.ConfigurationHelper
         /// </summary>
         static Config()
         {
-            _config = ConfigurationManager.OpenExeConfiguration
+            config = ConfigurationManager.OpenExeConfiguration
                 (ConfigurationUserLevel.None);
-            _appSettingsSection = _config.AppSettings;
-            _dataSettingsSection = (AppSettingsSection)
-                _config.GetSection("dataSettings");
-            _appDataSection = (AppDataSection)
-                _config.GetSection("appData");
-            _connectionStringsSection = _config.ConnectionStrings;
+            appSettingsSection = config.AppSettings;
+            dataSettingsSection = (AppSettingsSection)
+                config.GetSection("dataSettings");
+            appDataSection = (AppDataSection)
+                config.GetSection("appData");
+            connectionStringsSection = config.ConnectionStrings;
         }
 
         #endregion
@@ -63,7 +63,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static AppSettingsSection AppSettingsSection
         {
-            get => _appSettingsSection;
+            get => appSettingsSection;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static KeyValueConfigurationCollection AppSettings
         {
-            get => _appSettingsSection?.Settings;
+            get => appSettingsSection?.Settings;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static AppSettingsSection DataSettingsSection
         {
-            get => _dataSettingsSection;
+            get => dataSettingsSection;
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static KeyValueConfigurationCollection DataSettings
         {
-            get => _dataSettingsSection?.Settings;
+            get => dataSettingsSection?.Settings;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static AppDataSection AppDataSection
         {
-            get => _appDataSection;
+            get => appDataSection;
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static KeyValueConfigurationCollection AppData
         {
-            get => _appDataSection?.Settings;
+            get => appDataSection?.Settings;
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static ConnectionStringsSection ConnectionStringsSection
         {
-            get => _connectionStringsSection;
+            get => connectionStringsSection;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Gucu112.ConfigurationHelper
         /// </value>
         public static ConnectionStringSettingsCollection ConnectionStrings
         {
-            get => _connectionStringsSection?.ConnectionStrings;
+            get => connectionStringsSection?.ConnectionStrings;
         }
 
         #endregion

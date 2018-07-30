@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ConfigurationHelper")]
-[assembly: AssemblyDescription("Extended configuration library for .NET")]
+[assembly: AssemblyDescription("Extended configuration library for .NET framework.")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Gucu112")]
 [assembly: AssemblyProduct("Gucu112.ConfigurationHelper")]
 [assembly: AssemblyCopyright("Copyright © Gucu112 2017")]
 [assembly: AssemblyTrademark("")]

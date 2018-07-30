@@ -51,6 +51,21 @@ namespace Gucu112.ConfigurationHelper.Extensions
         }
 
         /// <summary>
+        /// Converts <see cref="KeyValueConfigurationCollection"/> to the list.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <returns>The list.</returns>
+        public static IList<string> ToList(this KeyValueConfigurationCollection collection)
+        {
+            if (collection == null)
+            {
+                return new List<string>();
+            }
+            return collection.AllKeys.Select
+                (key => collection.Get(key)).ToList();
+        }
+
+        /// <summary>
         /// Converts <see cref="KeyValueConfigurationCollection"/> to the dictionary.
         /// </summary>
         /// <param name="collection">The collection.</param>

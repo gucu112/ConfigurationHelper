@@ -5,6 +5,8 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
     [ConfigurationCollection(typeof(AppDataElement))]
     public sealed class AppDataInnerCollection : AppDataCollection
     {
+        #region Inherited methods
+
         /// <summary>
         /// Gets the element key for a specified configuration element.
         /// </summary>
@@ -16,5 +18,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         {
             return (element as AppDataElement)?.Value;
         }
+
+        #endregion
     }
 }
