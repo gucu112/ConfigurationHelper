@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Xunit;
 
@@ -22,6 +21,7 @@ namespace ConfigurationHelper.Test
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Environment.SetEnvironmentVariable("ENV", "development");
             Environment.SetEnvironmentVariable("DATA_DIR", "test");
+            Environment.SetEnvironmentVariable("TEMP", @"D:\AppData\Local\Temp");
         }
 
         #endregion
@@ -68,8 +68,6 @@ namespace ConfigurationHelper.Test
         {
             Assert.Equal("64 63 54 67 54 84", Config.DataSettings.Get("Data64Value"));
             Assert.Equal("64 63 54 67 54 84", Config.DataSettings["Data64Value"].Value);
-            Assert.Equal("64 63 54 67 54 84", Config.AppData.Get("Data64Value"));
-            Assert.Equal("64 63 54 67 54 84", Config.AppData["Data64Value"].Value);
         }
 
         /// <summary>
@@ -88,12 +86,10 @@ namespace ConfigurationHelper.Test
         [InlineData(typeof(long), "DataLong", -4294967296)]
         public void DataSettingsGenericTest(Type type, string key, object value)
         {
-            MethodInfo genericMethodGet = typeof(KeyValueConfigurationCollectionExtensions).GetMethods()
-                .Single(method => method.Name == "Get" && method.IsGenericMethod).MakeGenericMethod(type);
-            object invokedByDataSettingsValue = genericMethodGet.Invoke(null, new object[] { Config.DataSettings, key });
-            object invokedByDataAliasValue = genericMethodGet.Invoke(null, new object[] { Config.AppData, key });
-            Assert.Equal(Convert.ChangeType(value, type), invokedByDataSettingsValue);
-            Assert.Equal(Convert.ChangeType(value, type), invokedByDataAliasValue);
+            object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
+                .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
+                .MakeGenericMethod(type).Invoke(null, new object[] { Config.DataSettings, key });
+            Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 
         /// <summary>
@@ -132,18 +128,124 @@ namespace ConfigurationHelper.Test
         }
 
         /// <summary>
-        /// Expands the data settings by environment variables test.
+        /// Tests expanding of the data settings by environment variables.
         /// </summary>
         [Fact]
         public void ExpandDataSettingsByEnvironmentVariablesTest()
         {
             Assert.Equal(@"C:\Data\test", Config.DataSettings.Get("DataFolder"));
             Assert.Equal(@"C:\Data\test", Environment.ExpandEnvironmentVariables
-                (Config.AppData["DataFolder"].Value));
+                (Config.DataSettings["DataFolder"].Value));
             Environment.SetEnvironmentVariable("DATA_DIR", "data");
             Assert.Equal(@"C:\Data\data", Config.DataSettings.Get("DataFolder"));
             Assert.Equal(@"C:\Data\data", Environment.ExpandEnvironmentVariables
-                (Config.AppData["DataFolder"].Value));
+                (Config.DataSettings["DataFolder"].Value));
+        }
+
+        /// <summary>
+        /// Tests expanding of the application data by environment variables.
+        /// </summary>
+        [Fact]
+        public void ExpandAppDataByEnvironmentVariablesTest()
+        {
+            Assert.Equal(@"D:\AppData\Local\Temp", Config.AppData.Get("TemporaryFolder"));
+            Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
+                (Config.AppData["TemporaryFolder"].Value));
+            Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
+                (Config.AppDataSection.Collection["TemporaryFolder"]));
+        }
+
+        /// <summary>
+        /// Tests acquiring of non-existing value from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataNonExistingValueTest()
+        {
+            Assert.Throws<ArgumentException>(() => Config.AppData.Get("NonExisting"));
+            Assert.Throws<NullReferenceException>(() => Config.AppData["NonExisting"].Value);
+            Assert.Null(Config.AppDataSection.Collection["NonExisting"]);
+        }
+
+        /// <summary>
+        /// Tests acquiring of empty value from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataEmptyValueTest()
+        {
+            Assert.Empty(Config.AppData.Get("EmptyValue"));
+            Assert.Empty(Config.AppData["EmptyValue"].Value);
+            Assert.Empty(Config.AppDataSection.Collection["EmptyValue"]);
+        }
+
+        /// <summary>
+        /// Tests acquiring of value from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataValueTest()
+        {
+            Assert.Equal("123", Config.AppData.Get("Value"));
+            Assert.Equal("123", Config.AppData["Value"].Value);
+            Assert.Equal("123", Config.AppDataSection.Collection["Value"]);
+        }
+
+        /// <summary>
+        /// Tests acquiring of empty list from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataEmptyListTest()
+        {
+            Assert.Empty(Config.AppDataSection.GetList("EmptyCollection"));
+        }
+
+        /// <summary>
+        /// Tests acquiring of single element list from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataSingleElementListTest()
+        {
+            Assert.Collection(Config.AppDataSection.GetList("SingleElementList"),
+                i => Assert.Equal("Test", i));
+        }
+
+        /// <summary>
+        /// Tests acquiring of multiple elements list from application data by generic method.
+        /// </summary>
+        [Fact]
+        public void AppDataMultipleElementsGenericListTest()
+        {
+            Assert.Collection(Config.AppDataSection.GetList<double>("MultipleElementsList"),
+                i => Assert.Equal(1.3D, i), i => Assert.Equal(2.6D, i), i => Assert.Equal(3.9D, i));
+        }
+
+        /// <summary>
+        /// Tests acquiring of empty dictionary from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataEmptyDictionaryTest()
+        {
+            Assert.Empty(Config.AppDataSection.GetDictionary("EmptyCollection"));
+        }
+
+        /// <summary>
+        /// Tests acquiring of single element dictionary from application data.
+        /// </summary>
+        [Fact]
+        public void AppDataSingleElementDictionaryTest()
+        {
+            Assert.Collection(Config.AppDataSection.GetDictionary("SingleElementDictionary"),
+                e => { Assert.Equal("Key", e.Key); Assert.Equal("Value", e.Value); });
+        }
+
+        /// <summary>
+        /// Tests acquiring of multiple elements dictionary from application data by generic method.
+        /// </summary>
+        [Fact]
+        public void AppDataMultipleElementsGenericDictionaryTest()
+        {
+            Assert.Collection(Config.AppDataSection.GetDictionary<int>("MultipleElementsDictionary"),
+                e => { Assert.Equal("First", e.Key); Assert.Equal(1, e.Value); },
+                e => { Assert.Equal("Second", e.Key); Assert.Equal(2, e.Value); },
+                e => { Assert.Equal("Third", e.Key); Assert.Equal(3, e.Value); });
         }
 
         #endregion
