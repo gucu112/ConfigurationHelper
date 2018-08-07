@@ -49,9 +49,9 @@ namespace ConfigurationHelper.Test
         {
             foreach (TypeCode typeCode in Enum.GetValues(typeof(TypeCode)))
             {
-                var type = Type.GetType($"System.{typeCode.ToString()}");
-                var values = GetBuiltInTypeExampleValues(typeCode);
-                foreach (var value in values)
+                Type type = Type.GetType($"System.{typeCode.ToString()}");
+                object[] values = GetBuiltInTypeExampleValues(typeCode);
+                foreach (object value in values)
                 {
                     yield return new object[] { type, value };
                 }
@@ -67,7 +67,7 @@ namespace ConfigurationHelper.Test
         /// </returns>
         private static object[] GetBuiltInTypeExampleValues(TypeCode typeCode)
         {
-            var randomize = new Random();
+            Random randomize = new Random();
             switch (typeCode)
             {
                 case TypeCode.Empty:
@@ -79,42 +79,42 @@ namespace ConfigurationHelper.Test
                 case TypeCode.Boolean:
                     return new object[] { true, false };
                 case TypeCode.Char:
-                    var charValues = Enumerable.Range(Char.MinValue / 10, Char.MaxValue / 10)
+                    List<char> charValues = Enumerable.Range(Char.MinValue / 10, Char.MaxValue / 10)
                         .Select(i => (char)(i * 10)).ToList();
                     charValues.AddRange(new List<char>() { Char.MinValue, Char.MaxValue });
                     return charValues.Select(c => (object)c).ToArray();
                 case TypeCode.SByte:
-                    var sByteValues = Enumerable.Range(SByte.MinValue / 10, Math.Abs(SByte.MinValue / 10) + SByte.MaxValue / 10)
+                    List<sbyte> sByteValues = Enumerable.Range(SByte.MinValue / 10, Math.Abs(SByte.MinValue / 10) + SByte.MaxValue / 10)
                         .Select(i => (sbyte)(i * 10)).ToList();
                     sByteValues.AddRange(new List<sbyte>() { SByte.MinValue, SByte.MaxValue });
                     return sByteValues.Select(b => (object)b).ToArray();
                 case TypeCode.Byte:
-                    var byteValues = Enumerable.Range(Byte.MinValue / 10, Byte.MaxValue / 10)
+                    List<byte> byteValues = Enumerable.Range(Byte.MinValue / 10, Byte.MaxValue / 10)
                         .Select(i => (byte)(i * 10)).ToList();
                     byteValues.AddRange(new List<byte>() { Byte.MinValue, Byte.MaxValue });
                     return byteValues.Select(b => (object)b).ToArray();
                 case TypeCode.Int16:
-                    var int16Values = Enumerable.Range(Int16.MinValue / 1000, Math.Abs(Int16.MinValue / 1000) + Int16.MaxValue / 1000)
+                    List<short> int16Values = Enumerable.Range(Int16.MinValue / 1000, Math.Abs(Int16.MinValue / 1000) + Int16.MaxValue / 1000)
                         .Select(i => i * 1000).Where(i => i < SByte.MinValue || i > SByte.MaxValue)
                         .Select(i => i + randomize.Next(0, 999)).Select(i => (short)i).ToList();
                     int16Values.AddRange(new List<short>() { Int16.MinValue, Int16.MaxValue });
-                        return int16Values.Select(s => (object)s).ToArray();
+                    return int16Values.Select(s => (object)s).ToArray();
                 case TypeCode.UInt16:
-                    var uint16Values = Enumerable.Range(UInt16.MinValue / 1000, UInt16.MaxValue / 1000)
+                    List<ushort> uint16Values = Enumerable.Range(UInt16.MinValue / 1000, UInt16.MaxValue / 1000)
                         .Select(i => i * 1000).Where(i => i > Byte.MaxValue)
                         .Select(i => i + randomize.Next(0, 999)).Select(i => (ushort)i).ToList();
                     uint16Values.AddRange(new List<ushort>() { UInt16.MinValue, UInt16.MaxValue });
                     return uint16Values.Select(s => (object)s).ToArray();
                 case TypeCode.Int32:
-                    var int32Values = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
+                    List<int> int32Values = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
                         .Select(i => i * 100000000).Where(i => i < Int16.MinValue || i > Int16.MaxValue)
                         .Select(i => i + randomize.Next(0, 99999999)).ToList();
                     int32Values.AddRange(new List<int>() { Int32.MinValue, Int32.MaxValue });
                     return int32Values.Select(i => (object)i).ToArray();
                 case TypeCode.UInt32:
-                    var uint32HalfValues = Enumerable.Range((int)UInt32.MinValue / 100000000, Int32.MaxValue / 100000000)
+                    IEnumerable<uint> uint32HalfValues = Enumerable.Range((int)UInt32.MinValue / 100000000, Int32.MaxValue / 100000000)
                         .Select(i => i * 100000000).Where(i => i < Int16.MinValue || i > Int16.MaxValue).Select(i => (uint)i);
-                    var uint32Values = uint32HalfValues.Concat(uint32HalfValues.Select(u => u + Int32.MaxValue))
+                    List<uint> uint32Values = uint32HalfValues.Concat(uint32HalfValues.Select(u => u + Int32.MaxValue))
                         .Select(i => (uint)(i + randomize.Next(0, 99999999))).ToList();
                     uint32Values.AddRange(new List<uint>() { UInt32.MinValue, UInt32.MaxValue });
                     return uint32Values.Select(i => (object)i).ToArray();
@@ -123,14 +123,14 @@ namespace ConfigurationHelper.Test
                 case TypeCode.UInt64:
                     return new object[] { UInt64.MinValue, UInt64.MaxValue };
                 case TypeCode.Single:
-                    var floatValues = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
+                    List<float> floatValues = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
                         .Select(i => i * 100000000).Where(i => i < Int16.MinValue || i > Int16.MaxValue)
                         .Select(i => i + randomize.Next(0, 99999999)).Select(i => (float)i)
                         .Select(f => f + randomize.Next(0, 9999999) / 10000000f).ToList();
                     floatValues.AddRange(new List<float>() { Single.MinValue, Single.MaxValue });
                     return floatValues.Select(f => (object)f).ToArray();
                 case TypeCode.Double:
-                    var doubleValues = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
+                    List<double> doubleValues = Enumerable.Range(Int32.MinValue / 100000000, Math.Abs(Int32.MinValue / 100000000) + Int32.MaxValue / 100000000)
                         .Select(i => i * 100000000).Where(i => i < Int16.MinValue || i > Int16.MaxValue)
                         .Select(i => i + randomize.Next(0, 99999999)).Select(i => (double)i)
                         .Select(d => d + randomize.Next(0, 999999999) / 1000000000D).ToList();

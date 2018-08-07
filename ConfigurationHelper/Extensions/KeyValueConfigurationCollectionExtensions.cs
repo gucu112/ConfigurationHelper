@@ -42,7 +42,7 @@ namespace Gucu112.ConfigurationHelper.Extensions
         /// <exception cref="Exception">Cannot convert to specified type.</exception>
         public static T Get<T>(this KeyValueConfigurationCollection collection, string key)
         {
-            var value = collection.Get(key);
+            string value = collection.Get(key);
             if (!CanChangeType(value, typeof(T)))
             {
                 throw new Exception($"Cannot convert to '{typeof(T).ToString()}' type.");

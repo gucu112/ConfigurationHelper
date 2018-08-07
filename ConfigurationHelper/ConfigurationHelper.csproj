@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
+    <Compile Include="ConfigurationManager.cs" />
+    <Compile Include="ConfigurationSettingsCollection.cs" />
     <Compile Include="Extensions\KeyValueConfigurationCollectionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyReleaseNotesAttribute.cs" />

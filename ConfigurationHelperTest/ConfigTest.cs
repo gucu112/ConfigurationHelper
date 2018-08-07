@@ -1,6 +1,7 @@
-﻿using Gucu112.ConfigurationHelper;
-using Gucu112.ConfigurationHelper.Extensions;
+﻿using Gucu112.ConfigurationHelper.Extensions;
+using Gucu112.ConfigurationHelper.Sections.AppData;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
@@ -18,7 +19,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppSettingsTest()
         {
-            foreach (var element in Config.AppSettings.ToDictionary())
+            foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.AppSettings.ToDictionary())
             {
                 Assert.Equal(ConfigurationManager.AppSettings[element.Key],
                     element.Value);
@@ -31,23 +32,45 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void DataSettingsTest()
         {
-            var configurationManagerDataSettings = ((AppSettingsSection)
+            KeyValueConfigurationCollection configurationManagerDataSettings = ((AppSettingsSection)
                 ConfigurationManager.GetSection("dataSettings"))?.Settings;
             if (configurationManagerDataSettings == null)
             {
-                Assert.Empty(Config.DataSettings.ToDictionary());
-                Assert.Empty(Config.AppData.ToDictionary());
+                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
+                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary());
             }
             else
             {
-                foreach (var element in Config.DataSettings.ToDictionary())
+                Assert.Equal(configurationManagerDataSettings.AllKeys.Select(key => configurationManagerDataSettings[key].Value).ToList(),
+                    Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
+                foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary())
                 {
                     Assert.Equal(configurationManagerDataSettings[element.Key].Value,
                         element.Value);
                 }
-                foreach (var element in Config.AppData.ToDictionary())
+            }
+        }
+
+        /// <summary>
+        /// Tests the application data object.
+        /// </summary>
+        [Fact]
+        public void AppDataSettingsTest()
+        {
+            KeyValueConfigurationCollection configurationManagerAppData = ((AppDataSection)
+                ConfigurationManager.GetSection("appData"))?.Settings;
+            if (configurationManagerAppData == null)
+            {
+                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToList());
+                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToDictionary());
+            }
+            else
+            {
+                Assert.Equal(configurationManagerAppData.AllKeys.Select(key => configurationManagerAppData[key].Value).ToList(),
+                    Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToList());
+                foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToDictionary())
                 {
-                    Assert.Equal(configurationManagerDataSettings[element.Key].Value,
+                    Assert.Equal(configurationManagerAppData[element.Key].Value,
                         element.Value);
                 }
             }
@@ -60,7 +83,7 @@ namespace ConfigurationHelper.Test
         public void ConnectionStringsTest()
         {
             Assert.Equal(ConfigurationManager.ConnectionStrings,
-                Config.ConnectionStrings);
+                Gucu112.ConfigurationHelper.ConfigurationManager.ConnectionStrings);
         }
 
         /// <summary>
@@ -78,14 +101,14 @@ namespace ConfigurationHelper.Test
             }
             else if (type == typeof(object))
             {
-                var convertedValue = Convert.ChangeType(value, type);
+                object convertedValue = Convert.ChangeType(value, type);
                 Assert.True(value.Equals(convertedValue));
             }
             else
             {
                 MethodInfo privateMethodCanChangeType = typeof(KeyValueConfigurationCollectionExtensions)
                     .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Static);
-                var canChangeValue = (bool)privateMethodCanChangeType.Invoke(null, new object[] { value, type });
+                bool canChangeValue = (bool)privateMethodCanChangeType.Invoke(null, new object[] { value, type });
                 Assert.True(canChangeValue);
             }
         }
@@ -114,22 +137,22 @@ namespace ConfigurationHelper.Test
                         Assert.Equal(string.Empty, value.ToString());
                         break;
                     case nameof(Single):
-                        var singleValue = Convert.ChangeType
+                        object singleValue = Convert.ChangeType
                             (((float)value).ToString("R"), type);
                         Assert.Equal(singleValue, value);
                         break;
                     case nameof(Double):
-                        var doubleValue = Convert.ChangeType
+                        object doubleValue = Convert.ChangeType
                             (((double)value).ToString("R"), type);
                         Assert.Equal(doubleValue, value);
                         break;
                     case nameof(DateTime):
-                        var dateTimeValue = Convert.ChangeType
+                        object dateTimeValue = Convert.ChangeType
                             (((DateTime)value).ToString("o"), type);
                         Assert.Equal(dateTimeValue, value);
                         break;
                     default:
-                        var convertedValue = Convert.ChangeType(value.ToString(), type);
+                        object convertedValue = Convert.ChangeType(value.ToString(), type);
                         Assert.Equal(convertedValue, value);
                         break;
                 }

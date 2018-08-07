@@ -16,7 +16,7 @@ namespace Gucu112.ConfigurationHelper.Runner
         static void Main(string[] args)
         {
             // Change current culture
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(Config.AppSettings.Get("DefaultCulture"));
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(ConfigurationManager.AppSettings.Get("DefaultCulture"));
             // Run program examples
             ProgramExamples.GetConfigSetting();
             ProgramExamples.GetByteCodeKey();
@@ -45,7 +45,7 @@ namespace Gucu112.ConfigurationHelper.Runner
         /// </summary>
         public static void GetConfigSetting()
         {
-            var test = Config.AppSettings["TestString"].Value;
+            string test = ConfigurationManager.AppSettings["TestString"];
             Console.WriteLine(test);
         }
 
@@ -54,7 +54,7 @@ namespace Gucu112.ConfigurationHelper.Runner
         /// </summary>
         public static void GetByteCodeKey()
         {
-            var data64 = Config.DataSettings.Get("Data64Value");
+            string data64 = ConfigurationManager.DataSettings.Get("Data64Value");
             Console.WriteLine(data64.Split(' ')
                 .Aggregate((str, b) => $"{str}{(char)int.Parse(b)}"));
         }
@@ -64,8 +64,8 @@ namespace Gucu112.ConfigurationHelper.Runner
         /// </summary>
         public static void DatabaseConnection()
         {
-            using (var connection = new SqlConnection
-                (Config.ConnectionStrings["DatabaseConnectionString"].ConnectionString))
+            using (SqlConnection connection = new SqlConnection
+                (ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString))
             {
                 try
                 {
@@ -96,8 +96,8 @@ namespace Gucu112.ConfigurationHelper.Runner
         /// </summary>
         public static void GetCastedValue()
         {
-            var amount = Config.DataSettings.Get<float>("DataFloat");
-            var currency = Config.AppSettings.Get<char>("TestChar");
+            float amount = ConfigurationManager.DataSettings.Get<float>("DataFloat");
+            char currency = ConfigurationManager.AppSettings.Get<char>("TestChar");
             Console.WriteLine($"{amount:0.#}{currency}");
         }
 
@@ -107,31 +107,31 @@ namespace Gucu112.ConfigurationHelper.Runner
         public static void GetConfigFromAppData()
         {
             // Simple data
-            var collection = Config.AppDataSection.Collection;
+            ConfigurationSettingsCollection collection = ConfigurationManager.AppData;
             Console.WriteLine($"Non-Existing: {collection["NonExisting"] ?? "null"}");
             Console.WriteLine($"EmptyValue: '{collection["EmptyValue"]}'");
             Console.WriteLine($"Value: {collection["Value"]}");
 
             // Empty list
-            var emptyList = Config.AppDataSection.GetList("EmptyCollection");
+            IList<string> emptyList = ConfigurationManager.AppDataSection.GetList("EmptyCollection");
             ShowEnumeratorData("EmptyList", emptyList);
             // Single element list
-            var singleElementList = Config.AppDataSection.GetList("SingleElementList");
+            IList<string> singleElementList = ConfigurationManager.AppDataSection.GetList("SingleElementList");
             ShowEnumeratorData("SingleElementList", singleElementList);
             // Multiple elements list
-            var multipleElementsList = Config.AppDataSection.GetList<double>("MultipleElementsList");
+            IList<double> multipleElementsList = ConfigurationManager.AppDataSection.GetList<double>("MultipleElementsList");
             ShowEnumeratorData("MultipleElementsList", multipleElementsList);
             Console.WriteLine($"MultipleElementsList[1]: {multipleElementsList[1]}");
 
             // Empty dictionary
-            var emptyDictionary = Config.AppDataSection.GetDictionary("EmptyCollection");
+            IDictionary<string, string> emptyDictionary = ConfigurationManager.AppDataSection.GetDictionary("EmptyCollection");
             ShowEnumeratorData("EmptyDictionary", emptyDictionary);
             // Single element dictionary
-            var singleElementDictionary = Config.AppDataSection.GetDictionary("SingleElementDictionary");
+            IDictionary<string, string> singleElementDictionary = ConfigurationManager.AppDataSection.GetDictionary("SingleElementDictionary");
             ShowEnumeratorData("SingleElementDictionary", singleElementDictionary,
                 e => $"{e.Key}: {e.Value}");
             // Multiple elements dictionary
-            var multipleElementsDictionary = Config.AppDataSection.GetDictionary<int>("MultipleElementsDictionary");
+            IDictionary<string, int> multipleElementsDictionary = ConfigurationManager.AppDataSection.GetDictionary<int>("MultipleElementsDictionary");
             ShowEnumeratorData("MultipleElementsDictionary", multipleElementsDictionary,
                 e => $"{e.Key}: {e.Value}");
             Console.WriteLine($"MultipleElementsDictionary[\"Second\"]: {multipleElementsDictionary["Second"]}");
@@ -161,7 +161,7 @@ namespace Gucu112.ConfigurationHelper.Runner
                 {
                     toString = e => e.ToString();
                 }
-                foreach (var item in enumerator)
+                foreach (T item in enumerator)
                 {
                     Console.WriteLine($"  > {toString(item)}");
                 }

@@ -41,8 +41,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<string> GetList(string key)
         {
-            var collection = Collection[key] as AppDataCollection;
-            if (collection == null)
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new List<string>();
             }
@@ -59,8 +58,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<T> GetList<T>(string key)
         {
-            var collection = Collection[key] as AppDataCollection;
-            if (collection == null)
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new List<T>();
             }
@@ -76,8 +74,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, string> GetDictionary(string key)
         {
-            var collection = Collection[key] as AppDataCollection;
-            if (collection == null)
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, string>();
             }
@@ -94,8 +91,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, T> GetDictionary<T>(string key)
         {
-            var collection = Collection[key] as AppDataCollection;
-            if (collection == null)
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, T>();
             }

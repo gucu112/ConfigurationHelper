@@ -1,59 +1,68 @@
 # ConfigurationHelper
 
-![ConfigurationHelper](http://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg)
+![ConfigurationHelper](ConfigurationHelperIcon.svg)
 
 Extended configuration library for .NET framework.
 
 ## Key Features
 
-- Adds `Config` static class as configuration manager,
-- Standard `AppSettings` and `ConnectionStrings`,
-- Section `<dataSettings>` as `AppSettingsSection`,
-- Implemented `AppDataSecion` which can store `List`s and `Dictionary`ies,
+- No third-party dependencies, only `System.Configuration` reference is used,
+- Replaces default `ConfigurationManager` static class,
 - Extends `KeyValueConfigurationCollection` in order to get casted values expanded by environment variables,
+- Standard `AppSettings` and `ConnectionStrings` properties available with extended behavior,
+- Possibility to use additional section `<dataSettings>` implemented as `AppSettingsSection` class,
+- Adds brand new `<appData>` section implemented as `AppDataSecion` which can store `List`s and `Dictionary`ies,
 - Example program and tests (both acceptance and units).
 
 ## Installation
 
-The ready to use library (stable release build) can be downloaded via NuGet package manager or found in [NuGet gallery](https://www.nuget.org/packages/ConfigurationHelper). Source code for all released versions can be found on [GitHub](https://github.com/gucu112/ConfigurationHelper/releases).
+The ready to use library (stable release build) can be downloaded via NuGet package manager and found in [NuGet gallery](https://www.nuget.org/packages/ConfigurationHelper). Source code for all released versions can be found on [GitHub](https://github.com/gucu112/ConfigurationHelper/releases).
 
 ## Code Examples
 
-Library is used for acquiring configuration data using following methods:
+Library can be used for acquiring configuration data using standard syntax or function `Get()` as follows:
 ```csharp
-// Get string value
-string env = Config.AppSettings.Get("ApplicationEnvironment");
+// Get string value using standard syntax (not extended by environment variables)
+string lang = ConfigurationManager.AppSettings["Language"];
 
-// Get casted value
-float limit = Config.DataSettings.Get<float>("CapacityLimit");
-
-// Get list of strings
-IList<string> fruits = Config.AppDataSection.GetList("FruitsList");
-
-// Get list of casted values
-IList<double> numbers = Config.AppDataSection.GetList<double>("AcceptedNumbers");
-
-// Get dictionary of strings
-IDictionary<string, string> redirects = Config.AppDataSection.GetDictionary("RedirectionTable");
-
-// Get dictionary of casted values
-IDictionary<string, int> mapping = Config.AppDataSection.GetDictionary<int>("WordToNumberMapping");
-
+// Get string value (extended by environment variables)
+string env = ConfigurationManager.AppSettings.Get("ApplicationEnvironment");
 ```
 
-You can use environment variables in you configuration like this:
+You can use environment variables in you configuration file like this:
 ```xml
 <appSettings>
     <add key="ApplicationEnvironment" value="%ENV%"/>
 </appSettings>
 ```
 
-Except default configuration section you can use additional ones defined in `App.config` file:
+Generic version of `Get<T>()` function automatically casts the value specified by configuration key:
+```csharp
+// Get casted value (can be stored in environment variables as well)
+float limit = ConfigurationManager.DataSettings.Get<float>("CapacityLimit");
+```
+
+Except default configuration section you can use additional ones defined at the beginning of your `App.config` file:
 ```xml
 <configSections>
     <section name="dataSettings" type="System.Configuration.AppSettingsSection"/>
     <section name="appData" type="Gucu112.ConfigurationHelper.Sections.AppData.AppDataSection, ConfigurationHelper"/>
 </configSections>
+```
+
+Values stored in `<appData>` section can be multiple and collected using following methods:
+```csharp
+// Get list of strings
+IList<string> fruits = ConfigurationManager.AppDataSection.GetList("FruitsList");
+
+// Get list of casted values
+IList<double> numbers = ConfigurationManager.AppDataSection.GetList<double>("AcceptedNumbers");
+
+// Get dictionary of strings
+IDictionary<string, string> redirects = ConfigurationManager.AppDataSection.GetDictionary("RedirectionTable");
+
+// Get dictionary of casted values
+IDictionary<string, int> mapping = ConfigurationManager.AppDataSection.GetDictionary<int>("WordToNumberMapping");
 ```
 
 ## Tests
@@ -74,6 +83,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - v0.5.0
   - Feature: Adds AssemblyReleaseNotesAttribute class
+  - Feature: Adds ConfigurationSettingsCollection class
+  - Changes main class from Config to ConfigurationManager
+  - Use auto property refactoring
+  - Use pattern matching refactoring
+  - Use explicit type refactoring
+  - Updates *.nuspec file
+  - Updates README.md
   - Updates assemblies info
 
 - v0.4.0
