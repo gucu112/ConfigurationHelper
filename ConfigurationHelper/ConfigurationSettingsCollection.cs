@@ -47,7 +47,7 @@ namespace Gucu112.ConfigurationHelper
         {
             get
             {
-                return base[key].Value;
+                return base[key]?.Value;
             }
         }
 

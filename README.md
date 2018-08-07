@@ -84,13 +84,18 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - v0.5.0
   - Feature: Adds AssemblyReleaseNotesAttribute class
   - Feature: Adds ConfigurationSettingsCollection class
+  - Fix: Adds null check for indexer in ConfigurationSettingsCollection class
+  - Downgrades ConfigurationHelper project .NET framework version to v4.5 for backwards compatibility
+  - Downgrades test and runner projects .NET framework version to v4.6
   - Changes main class from Config to ConfigurationManager
   - Use auto property refactoring
   - Use pattern matching refactoring
   - Use explicit type refactoring
   - Updates *.nuspec file
   - Updates README.md
+  - Updates dependencies
   - Updates assemblies info
+  - Removes unnecessary references
 
 - v0.4.0
   - Feature: AppData section
