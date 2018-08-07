@@ -8,10 +8,10 @@
     <owners>$author$</owners>
     <licenseUrl>http://github.com/gucu112/ConfigurationHelper/raw/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/gucu112/ConfigurationHelper</projectUrl>
-    <iconUrl>http://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg</iconUrl>
+    <iconUrl>https://cdn.rawgit.com/gucu112/ConfigurationHelper/2674a98f/ConfigurationHelperIcon.svg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>$releaseNotes$</releaseNotes>
     <copyright>Copyright (c) Gucu112 2017-2018 Bartlomiej Roszczypala</copyright>
     <tags>config configuration configuration-management csharp dotnet dot-net</tags>
   </metadata>

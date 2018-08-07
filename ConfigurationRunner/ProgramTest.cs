@@ -34,8 +34,8 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppSettingsTest()
         {
-            Assert.Equal("pq9u35b", Config.AppSettings.Get("TestString"));
-            Assert.Equal("pq9u35b", Config.AppSettings["TestString"].Value);
+            Assert.Equal("pq9u35b", ConfigurationManager.AppSettings["TestString"]);
+            Assert.Equal("pq9u35b", ConfigurationManager.AppSettings.Get("TestString"));
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ConfigurationHelper.Test
         {
             object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
                 .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
-                .MakeGenericMethod(type).Invoke(null, new object[] { Config.AppSettings, key });
+                .MakeGenericMethod(type).Invoke(null, new object[] { ConfigurationManager.AppSettings, key });
             Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 
@@ -66,8 +66,8 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void DataSettingsTest()
         {
-            Assert.Equal("64 63 54 67 54 84", Config.DataSettings.Get("Data64Value"));
-            Assert.Equal("64 63 54 67 54 84", Config.DataSettings["Data64Value"].Value);
+            Assert.Equal("64 63 54 67 54 84", ConfigurationManager.DataSettings["Data64Value"]);
+            Assert.Equal("64 63 54 67 54 84", ConfigurationManager.DataSettings.Get("Data64Value"));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace ConfigurationHelper.Test
         {
             object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
                 .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
-                .MakeGenericMethod(type).Invoke(null, new object[] { Config.DataSettings, key });
+                .MakeGenericMethod(type).Invoke(null, new object[] { ConfigurationManager.DataSettings, key });
             Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 
@@ -99,10 +99,11 @@ namespace ConfigurationHelper.Test
         public void ConnectionStringsSettingsTest()
         {
             Assert.Equal("DatabaseConnectionString",
-                Config.ConnectionStrings["DatabaseConnectionString"].Name);
+                ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].Name);
             Assert.Equal("System.Data.SqlClient",
-                Config.ConnectionStrings["DatabaseConnectionString"].ProviderName);
-            var connectionString = Config.ConnectionStrings["DatabaseConnectionString"].ConnectionString
+                ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ProviderName);
+            IDictionary<string, string> connectionString = ConfigurationManager
+                .ConnectionStrings["DatabaseConnectionString"].ConnectionString
                 .Split(';').Where(attr => !string.IsNullOrEmpty(attr)).Select(attr => new KeyValuePair<string, string>
                 (attr.Split('=')[0], attr.Split('=')[1])).ToDictionary(e => e.Key, e => e.Value);
             Assert.Equal(@".\SQLEXPRESS", connectionString["Data Source"]);
@@ -118,13 +119,13 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void ExpandAppSettingsByEnvironmentVariablesTest()
         {
-            Assert.Equal("development", Config.AppSettings.Get("ApplicationEnvironment"));
             Assert.Equal("development", Environment.ExpandEnvironmentVariables
-                (Config.AppSettings["ApplicationEnvironment"].Value));
+                (ConfigurationManager.AppSettings["ApplicationEnvironment"]));
+            Assert.Equal("development", ConfigurationManager.AppSettings.Get("ApplicationEnvironment"));
             Environment.SetEnvironmentVariable("ENV", "test");
-            Assert.Equal("test", Config.AppSettings.Get("ApplicationEnvironment"));
             Assert.Equal("test", Environment.ExpandEnvironmentVariables
-                (Config.AppSettings["ApplicationEnvironment"].Value));
+                (ConfigurationManager.AppSettings["ApplicationEnvironment"]));
+            Assert.Equal("test", ConfigurationManager.AppSettings.Get("ApplicationEnvironment"));
         }
 
         /// <summary>
@@ -133,13 +134,13 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void ExpandDataSettingsByEnvironmentVariablesTest()
         {
-            Assert.Equal(@"C:\Data\test", Config.DataSettings.Get("DataFolder"));
             Assert.Equal(@"C:\Data\test", Environment.ExpandEnvironmentVariables
-                (Config.DataSettings["DataFolder"].Value));
+                (ConfigurationManager.DataSettings["DataFolder"]));
+            Assert.Equal(@"C:\Data\test", ConfigurationManager.DataSettings.Get("DataFolder"));
             Environment.SetEnvironmentVariable("DATA_DIR", "data");
-            Assert.Equal(@"C:\Data\data", Config.DataSettings.Get("DataFolder"));
             Assert.Equal(@"C:\Data\data", Environment.ExpandEnvironmentVariables
-                (Config.DataSettings["DataFolder"].Value));
+                (ConfigurationManager.DataSettings["DataFolder"]));
+            Assert.Equal(@"C:\Data\data", ConfigurationManager.DataSettings.Get("DataFolder"));
         }
 
         /// <summary>
@@ -148,11 +149,11 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void ExpandAppDataByEnvironmentVariablesTest()
         {
-            Assert.Equal(@"D:\AppData\Local\Temp", Config.AppData.Get("TemporaryFolder"));
             Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
-                (Config.AppData["TemporaryFolder"].Value));
+                (ConfigurationManager.AppData["TemporaryFolder"]));
+            Assert.Equal(@"D:\AppData\Local\Temp", ConfigurationManager.AppData.Get("TemporaryFolder"));
             Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
-                (Config.AppDataSection.Collection["TemporaryFolder"]));
+                (ConfigurationManager.AppDataSection.Collection["TemporaryFolder"]));
         }
 
         /// <summary>
@@ -161,9 +162,9 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataNonExistingValueTest()
         {
-            Assert.Throws<ArgumentException>(() => Config.AppData.Get("NonExisting"));
-            Assert.Throws<NullReferenceException>(() => Config.AppData["NonExisting"].Value);
-            Assert.Null(Config.AppDataSection.Collection["NonExisting"]);
+            Assert.Throws<NullReferenceException>(() => ConfigurationManager.AppData["NonExisting"]);
+            Assert.Throws<ArgumentException>(() => ConfigurationManager.AppData.Get("NonExisting"));
+            Assert.Null(ConfigurationManager.AppDataSection.Collection["NonExisting"]);
         }
 
         /// <summary>
@@ -172,9 +173,9 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataEmptyValueTest()
         {
-            Assert.Empty(Config.AppData.Get("EmptyValue"));
-            Assert.Empty(Config.AppData["EmptyValue"].Value);
-            Assert.Empty(Config.AppDataSection.Collection["EmptyValue"]);
+            Assert.Empty(ConfigurationManager.AppData["EmptyValue"]);
+            Assert.Empty(ConfigurationManager.AppData.Get("EmptyValue"));
+            Assert.Empty(ConfigurationManager.AppDataSection.Collection["EmptyValue"]);
         }
 
         /// <summary>
@@ -183,9 +184,9 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataValueTest()
         {
-            Assert.Equal("123", Config.AppData.Get("Value"));
-            Assert.Equal("123", Config.AppData["Value"].Value);
-            Assert.Equal("123", Config.AppDataSection.Collection["Value"]);
+            Assert.Equal("123", ConfigurationManager.AppData["Value"]);
+            Assert.Equal("123", ConfigurationManager.AppData.Get("Value"));
+            Assert.Equal("123", ConfigurationManager.AppDataSection.Collection["Value"]);
         }
 
         /// <summary>
@@ -194,7 +195,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataEmptyListTest()
         {
-            Assert.Empty(Config.AppDataSection.GetList("EmptyCollection"));
+            Assert.Empty(ConfigurationManager.AppDataSection.GetList("EmptyCollection"));
         }
 
         /// <summary>
@@ -203,7 +204,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataSingleElementListTest()
         {
-            Assert.Collection(Config.AppDataSection.GetList("SingleElementList"),
+            Assert.Collection(ConfigurationManager.AppDataSection.GetList("SingleElementList"),
                 i => Assert.Equal("Test", i));
         }
 
@@ -213,7 +214,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataMultipleElementsGenericListTest()
         {
-            Assert.Collection(Config.AppDataSection.GetList<double>("MultipleElementsList"),
+            Assert.Collection(ConfigurationManager.AppDataSection.GetList<double>("MultipleElementsList"),
                 i => Assert.Equal(1.3D, i), i => Assert.Equal(2.6D, i), i => Assert.Equal(3.9D, i));
         }
 
@@ -223,7 +224,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataEmptyDictionaryTest()
         {
-            Assert.Empty(Config.AppDataSection.GetDictionary("EmptyCollection"));
+            Assert.Empty(ConfigurationManager.AppDataSection.GetDictionary("EmptyCollection"));
         }
 
         /// <summary>
@@ -232,8 +233,8 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataSingleElementDictionaryTest()
         {
-            Assert.Collection(Config.AppDataSection.GetDictionary("SingleElementDictionary"),
-                e => { Assert.Equal("Key", e.Key); Assert.Equal("Value", e.Value); });
+            Assert.Collection(ConfigurationManager.AppDataSection.GetDictionary("SingleElementDictionary"),
+                (KeyValuePair<string, string> e) => { Assert.Equal("Key", e.Key); Assert.Equal("Value", e.Value); });
         }
 
         /// <summary>
@@ -242,10 +243,10 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataMultipleElementsGenericDictionaryTest()
         {
-            Assert.Collection(Config.AppDataSection.GetDictionary<int>("MultipleElementsDictionary"),
-                e => { Assert.Equal("First", e.Key); Assert.Equal(1, e.Value); },
-                e => { Assert.Equal("Second", e.Key); Assert.Equal(2, e.Value); },
-                e => { Assert.Equal("Third", e.Key); Assert.Equal(3, e.Value); });
+            Assert.Collection(ConfigurationManager.AppDataSection.GetDictionary<int>("MultipleElementsDictionary"),
+                (KeyValuePair<string, int> e) => { Assert.Equal("First", e.Key); Assert.Equal(1, e.Value); },
+                (KeyValuePair<string, int> e) => { Assert.Equal("Second", e.Key); Assert.Equal(2, e.Value); },
+                (KeyValuePair<string, int> e) => { Assert.Equal("Third", e.Key); Assert.Equal(3, e.Value); });
         }
 
         #endregion

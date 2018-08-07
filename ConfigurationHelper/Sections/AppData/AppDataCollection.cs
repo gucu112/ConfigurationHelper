@@ -34,7 +34,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         {
             get
             {
-                var element = BaseGet(key) as AppDataElement;
+                AppDataElement element = BaseGet(key) as AppDataElement;
                 if (element?.Collection?.Any() ?? false)
                 {
                     return element.Collection;
