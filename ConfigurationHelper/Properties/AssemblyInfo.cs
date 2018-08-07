@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Gucu112.ConfigurationHelper.Properties;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,9 +11,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("Release")]
 [assembly: AssemblyCompany("Gucu112")]
 [assembly: AssemblyProduct("Gucu112.ConfigurationHelper")]
-[assembly: AssemblyCopyright("Copyright © Gucu112 2017")]
+[assembly: AssemblyCopyright("Copyright © Gucu112 2017-2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyReleaseNotes("Release notes are located at \"Changelog\" section in README.md file.")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

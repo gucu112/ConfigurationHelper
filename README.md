@@ -72,6 +72,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+- v0.5.0
+  - Feature: Adds AssemblyReleaseNotesAttribute class
+  - Updates assemblies info
+
 - v0.4.0
   - Feature: AppData section
   - Feature: Conversion from KeyValueConfigurationCollection to list of strings
