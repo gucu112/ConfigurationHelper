@@ -1,7 +1,18 @@
-﻿using System.Configuration;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="AppDataElement.cs" company="Gucu112">
+//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+// </copyright>
+// <author>Bartlomiej Roszczypala</author>
+//-----------------------------------------------------------------------------------
 
 namespace Gucu112.ConfigurationHelper.Sections.AppData
 {
+    using System.Configuration;
+
+    /// <summary>
+    /// Represents a configuration element within an application data collection.
+    /// </summary>
+    /// <seealso cref="ConfigurationElement" />
     public sealed class AppDataElement : ConfigurationElement
     {
         #region Public fields
@@ -41,7 +52,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         [ConfigurationProperty("", IsDefaultCollection = true)]
         public AppDataInnerCollection Collection
         {
-            get => base[""] as AppDataInnerCollection;
+            get => base[string.Empty] as AppDataInnerCollection;
         }
 
         #endregion

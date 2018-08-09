@@ -1,25 +1,36 @@
-﻿using Gucu112.ConfigurationHelper;
-using Gucu112.ConfigurationHelper.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using Xunit;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="ProgramTest.cs" company="Gucu112">
+//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+// </copyright>
+// <author>Bartlomiej Roszczypala</author>
+//-----------------------------------------------------------------------------------
 
 namespace ConfigurationHelper.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+    using Gucu112.ConfigurationHelper;
+    using Gucu112.ConfigurationHelper.Extensions;
+    using Xunit;
+
+    /// <summary>
+    /// Tests functional aspects of the <see cref="ConfigurationManager" /> class.
+    /// </summary>
     public class ProgramTest
     {
         #region Public constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProgramTest"/> class.
+        /// Initializes a new instance of the <see cref="ProgramTest" /> class.
         /// </summary>
         public ProgramTest()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Environment.SetEnvironmentVariable("ENV", "development");
+            Environment.SetEnvironmentVariable("DB_PASS", "password1");
             Environment.SetEnvironmentVariable("DATA_DIR", "test");
             Environment.SetEnvironmentVariable("TEMP", @"D:\AppData\Local\Temp");
         }
@@ -61,6 +72,37 @@ namespace ConfigurationHelper.Test
         }
 
         /// <summary>
+        /// Tests the connection strings object.
+        /// </summary>
+        [Fact]
+        public void ConnectionStringsSettingsTest()
+        {
+            Assert.Equal("DatabaseConnectionString", ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].Name);
+            Assert.Equal("System.Data.SqlClient", ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ProviderName);
+
+            IDictionary<string, string> connectionString = ConfigurationManager.ConnectionStrings["DatabaseConnectionString"]
+                .ConnectionString.Split(';').Where(attr => !string.IsNullOrEmpty(attr))
+                .Select(attr => new KeyValuePair<string, string>(attr.Split('=')[0], attr.Split('=')[1]))
+                .ToDictionary(e => e.Key, e => e.Value);
+
+            Assert.Equal(@".\SQLEXPRESS", connectionString["Data Source"]);
+            Assert.Equal("DatabaseName", connectionString["Initial Catalog"]);
+            Assert.Equal(3, Convert.ToInt32(connectionString["Connect Timeout"]));
+            Assert.True(Convert.ToBoolean(connectionString["Integrated Security"]));
+            Assert.True(Convert.ToBoolean(connectionString["MultipleActiveResultSets"]));
+        }
+
+        /// <summary>
+        /// Tests the server settings object.
+        /// </summary>
+        [Fact]
+        public void ServerSettingsTest()
+        {
+            Assert.Equal("DatabaseName", ConfigurationManager.ServerSettings["DatabaseName"]);
+            Assert.Equal("DatabaseName", ConfigurationManager.ServerSettings.Get("DatabaseName"));
+        }
+
+        /// <summary>
         /// Tests the data settings object.
         /// </summary>
         [Fact]
@@ -93,39 +135,41 @@ namespace ConfigurationHelper.Test
         }
 
         /// <summary>
-        /// Tests the connection strings object.
-        /// </summary>
-        [Fact]
-        public void ConnectionStringsSettingsTest()
-        {
-            Assert.Equal("DatabaseConnectionString",
-                ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].Name);
-            Assert.Equal("System.Data.SqlClient",
-                ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ProviderName);
-            IDictionary<string, string> connectionString = ConfigurationManager
-                .ConnectionStrings["DatabaseConnectionString"].ConnectionString
-                .Split(';').Where(attr => !string.IsNullOrEmpty(attr)).Select(attr => new KeyValuePair<string, string>
-                (attr.Split('=')[0], attr.Split('=')[1])).ToDictionary(e => e.Key, e => e.Value);
-            Assert.Equal(@".\SQLEXPRESS", connectionString["Data Source"]);
-            Assert.Equal("DatabaseName", connectionString["Initial Catalog"]);
-            Assert.Equal(3, Convert.ToInt32(connectionString["Connect Timeout"]));
-            Assert.True(Convert.ToBoolean(connectionString["Integrated Security"]));
-            Assert.True(Convert.ToBoolean(connectionString["MultipleActiveResultSets"]));
-        }
-
-        /// <summary>
         /// Tests expanding of the application settings by environment variables.
         /// </summary>
         [Fact]
         public void ExpandAppSettingsByEnvironmentVariablesTest()
         {
-            Assert.Equal("development", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.AppSettings["ApplicationEnvironment"]));
+            Assert.Equal(
+                "development",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["ApplicationEnvironment"]));
             Assert.Equal("development", ConfigurationManager.AppSettings.Get("ApplicationEnvironment"));
+
             Environment.SetEnvironmentVariable("ENV", "test");
-            Assert.Equal("test", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.AppSettings["ApplicationEnvironment"]));
+
+            Assert.Equal(
+                "test",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["ApplicationEnvironment"]));
             Assert.Equal("test", ConfigurationManager.AppSettings.Get("ApplicationEnvironment"));
+        }
+
+        /// <summary>
+        /// Tests expanding of the server settings by environment variables.
+        /// </summary>
+        [Fact]
+        public void ExpandServerSettingsByEnvironmentVariablesTest()
+        {
+            Assert.Equal(
+                "password1",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.ServerSettings["DatabasePassword"]));
+            Assert.Equal("password1", ConfigurationManager.ServerSettings.Get("DatabasePassword"));
+
+            Environment.SetEnvironmentVariable("DB_PASS", "n3wPa$$");
+
+            Assert.Equal(
+                "n3wPa$$",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.ServerSettings["DatabasePassword"]));
+            Assert.Equal("n3wPa$$", ConfigurationManager.ServerSettings.Get("DatabasePassword"));
         }
 
         /// <summary>
@@ -134,12 +178,16 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void ExpandDataSettingsByEnvironmentVariablesTest()
         {
-            Assert.Equal(@"C:\Data\test", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.DataSettings["DataFolder"]));
+            Assert.Equal(
+                @"C:\Data\test",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.DataSettings["DataFolder"]));
             Assert.Equal(@"C:\Data\test", ConfigurationManager.DataSettings.Get("DataFolder"));
+
             Environment.SetEnvironmentVariable("DATA_DIR", "data");
-            Assert.Equal(@"C:\Data\data", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.DataSettings["DataFolder"]));
+
+            Assert.Equal(
+                @"C:\Data\data",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.DataSettings["DataFolder"]));
             Assert.Equal(@"C:\Data\data", ConfigurationManager.DataSettings.Get("DataFolder"));
         }
 
@@ -149,11 +197,14 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void ExpandAppDataByEnvironmentVariablesTest()
         {
-            Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.AppData["TemporaryFolder"]));
+            Assert.Equal(
+                @"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables(ConfigurationManager.AppData["TemporaryFolder"]));
+
             Assert.Equal(@"D:\AppData\Local\Temp", ConfigurationManager.AppData.Get("TemporaryFolder"));
-            Assert.Equal(@"D:\AppData\Local\Temp", Environment.ExpandEnvironmentVariables
-                (ConfigurationManager.AppDataSection.Collection["TemporaryFolder"]));
+
+            Assert.Equal(
+                @"D:\AppData\Local\Temp",
+                Environment.ExpandEnvironmentVariables(ConfigurationManager.AppDataSection.Collection["TemporaryFolder"]));
         }
 
         /// <summary>
@@ -162,7 +213,7 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataNonExistingValueTest()
         {
-            Assert.Throws<NullReferenceException>(() => ConfigurationManager.AppData["NonExisting"]);
+            Assert.Null(ConfigurationManager.AppData["NonExisting"]);
             Assert.Throws<ArgumentException>(() => ConfigurationManager.AppData.Get("NonExisting"));
             Assert.Null(ConfigurationManager.AppDataSection.Collection["NonExisting"]);
         }
@@ -204,8 +255,9 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataSingleElementListTest()
         {
-            Assert.Collection(ConfigurationManager.AppDataSection.GetList("SingleElementList"),
-                i => Assert.Equal("Test", i));
+            Assert.Collection(
+                ConfigurationManager.AppDataSection.GetList("SingleElementList"),
+                (string i) => Assert.Equal("Test", i));
         }
 
         /// <summary>
@@ -214,8 +266,11 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataMultipleElementsGenericListTest()
         {
-            Assert.Collection(ConfigurationManager.AppDataSection.GetList<double>("MultipleElementsList"),
-                i => Assert.Equal(1.3D, i), i => Assert.Equal(2.6D, i), i => Assert.Equal(3.9D, i));
+            Assert.Collection(
+                ConfigurationManager.AppDataSection.GetList<double>("MultipleElementsList"),
+                (double i) => Assert.Equal(1.3D, i),
+                (double i) => Assert.Equal(2.6D, i),
+                (double i) => Assert.Equal(3.9D, i));
         }
 
         /// <summary>
@@ -233,8 +288,13 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataSingleElementDictionaryTest()
         {
-            Assert.Collection(ConfigurationManager.AppDataSection.GetDictionary("SingleElementDictionary"),
-                (KeyValuePair<string, string> e) => { Assert.Equal("Key", e.Key); Assert.Equal("Value", e.Value); });
+            Assert.Collection(
+                ConfigurationManager.AppDataSection.GetDictionary("SingleElementDictionary"),
+                (KeyValuePair<string, string> e) =>
+                {
+                    Assert.Equal("Key", e.Key);
+                    Assert.Equal("Value", e.Value);
+                });
         }
 
         /// <summary>
@@ -243,10 +303,23 @@ namespace ConfigurationHelper.Test
         [Fact]
         public void AppDataMultipleElementsGenericDictionaryTest()
         {
-            Assert.Collection(ConfigurationManager.AppDataSection.GetDictionary<int>("MultipleElementsDictionary"),
-                (KeyValuePair<string, int> e) => { Assert.Equal("First", e.Key); Assert.Equal(1, e.Value); },
-                (KeyValuePair<string, int> e) => { Assert.Equal("Second", e.Key); Assert.Equal(2, e.Value); },
-                (KeyValuePair<string, int> e) => { Assert.Equal("Third", e.Key); Assert.Equal(3, e.Value); });
+            Assert.Collection(
+                ConfigurationManager.AppDataSection.GetDictionary<int>("MultipleElementsDictionary"),
+                (KeyValuePair<string, int> e) =>
+                {
+                    Assert.Equal("First", e.Key);
+                    Assert.Equal(1, e.Value);
+                },
+                (KeyValuePair<string, int> e) =>
+                {
+                    Assert.Equal("Second", e.Key);
+                    Assert.Equal(2, e.Value);
+                },
+                (KeyValuePair<string, int> e) =>
+                {
+                    Assert.Equal("Third", e.Key);
+                    Assert.Equal(3, e.Value);
+                });
         }
 
         #endregion

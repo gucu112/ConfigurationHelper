@@ -68,8 +68,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="ConfigTest.cs" />
-    <Compile Include="ConfigTestData.cs" />
+    <Compile Include="ConfigurationManagerTest.cs" />
+    <Compile Include="ConfigurationManagerTestData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

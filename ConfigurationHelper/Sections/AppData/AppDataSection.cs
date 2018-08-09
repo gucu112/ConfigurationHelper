@@ -1,10 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="AppDataSection.cs" company="Gucu112">
+//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+// </copyright>
+// <author>Bartlomiej Roszczypala</author>
+//-----------------------------------------------------------------------------------
 
 namespace Gucu112.ConfigurationHelper.Sections.AppData
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+
+    /// <summary>
+    /// Represents an application data section within a configuration file.
+    /// </summary>
+    /// <seealso cref="ConfigurationSection" />
     public sealed class AppDataSection : ConfigurationSection
     {
         #region Public fields
@@ -18,7 +29,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         [ConfigurationProperty("", IsDefaultCollection = true)]
         public AppDataCollection Collection
         {
-            get => base[""] as AppDataCollection;
+            get => base[string.Empty] as AppDataCollection;
         }
 
         /// <summary>
@@ -29,7 +40,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </value>
         public KeyValueConfigurationCollection Settings
         {
-            get => (KeyValueConfigurationCollection)Collection;
+            get => (KeyValueConfigurationCollection)this.Collection;
         }
 
         /// <summary>
@@ -41,10 +52,11 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<string> GetList(string key)
         {
-            if (!(Collection[key] is AppDataCollection collection))
+            if (!(this.Collection[key] is AppDataCollection collection))
             {
                 return new List<string>();
             }
+
             return collection.Select(i => i.Value).ToList();
         }
 
@@ -58,10 +70,11 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<T> GetList<T>(string key)
         {
-            if (!(Collection[key] is AppDataCollection collection))
+            if (!(this.Collection[key] is AppDataCollection collection))
             {
                 return new List<T>();
             }
+
             return collection.Select(i => (T)Convert.ChangeType(i.Value, typeof(T))).ToList();
         }
 
@@ -74,10 +87,11 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, string> GetDictionary(string key)
         {
-            if (!(Collection[key] is AppDataCollection collection))
+            if (!(this.Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, string>();
             }
+
             return collection.ToDictionary(e => e.Key, e => e.Value);
         }
 
@@ -91,10 +105,11 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, T> GetDictionary<T>(string key)
         {
-            if (!(Collection[key] is AppDataCollection collection))
+            if (!(this.Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, T>();
             }
+
             return collection.ToDictionary(e => e.Key, e => (T)Convert.ChangeType(e.Value, typeof(T)));
         }
 
