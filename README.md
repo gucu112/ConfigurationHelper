@@ -32,7 +32,7 @@ string env = ConfigurationManager.AppSettings.Get("ApplicationEnvironment");
 You can use environment variables in you configuration file like this:
 ```xml
 <appSettings>
-    <add key="ApplicationEnvironment" value="%ENV%"/>
+    <add key="ApplicationEnvironment" value="%ENV%" />
 </appSettings>
 ```
 
@@ -45,8 +45,9 @@ float limit = ConfigurationManager.DataSettings.Get<float>("CapacityLimit");
 Except default configuration section you can use additional ones defined at the beginning of your `App.config` file:
 ```xml
 <configSections>
-    <section name="dataSettings" type="System.Configuration.AppSettingsSection"/>
-    <section name="appData" type="Gucu112.ConfigurationHelper.Sections.AppData.AppDataSection, ConfigurationHelper"/>
+    <section name="serverSettings" type="System.Configuration.AppSettingsSection" />
+    <section name="dataSettings" type="System.Configuration.AppSettingsSection" />
+    <section name="appData" type="Gucu112.ConfigurationHelper.Sections.AppData.AppDataSection, ConfigurationHelper" />
 </configSections>
 ```
 
@@ -80,6 +81,21 @@ See also the list of [contributors](https://github.com/Gucu112/ConfigurationHelp
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Changelog
+
+- v0.5.1
+  - Feature: ServerSettings section
+  - Overall refactoring to enforce a set of style and consistency rules
+  - Extracts ProgramExamples class
+  - Changes class names in ConfigurationHelperTest
+  - Changes in configuration file
+  - Removes AssemblyReleaseNotesAttribute class
+  - Updates unit & acceptance tests 
+  - Updates README.md
+  - Updates *.nuspec file
+  - Updates icon file
+  - Updates examples in ConfigurationRunner
+  - Updates assemblies info
+  - Updates documentation
 
 - v0.5.0
   - Feature: Adds AssemblyReleaseNotesAttribute class

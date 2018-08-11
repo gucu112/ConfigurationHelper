@@ -1,10 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="KeyValueConfigurationCollectionExtensions.cs" company="Gucu112">
+//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+// </copyright>
+// <author>Bartlomiej Roszczypala</author>
+//-----------------------------------------------------------------------------------
 
 namespace Gucu112.ConfigurationHelper.Extensions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Linq;
+
+    /// <summary>
+    /// Define extension methods for <see cref="KeyValueConfigurationCollection" /> class.
+    /// </summary>
     public static class KeyValueConfigurationCollectionExtensions
     {
         #region Public methods
@@ -23,10 +33,12 @@ namespace Gucu112.ConfigurationHelper.Extensions
             {
                 throw new ArgumentNullException("collection", "Collection cannot be null.");
             }
+
             if (collection[key] == null)
             {
                 throw new ArgumentException($"Configuration value for '{key}' key does not exists.", "key");
             }
+
             return Environment.ExpandEnvironmentVariables(collection[key].Value);
         }
 
@@ -47,11 +59,12 @@ namespace Gucu112.ConfigurationHelper.Extensions
             {
                 throw new Exception($"Cannot convert to '{typeof(T).ToString()}' type.");
             }
+
             return (T)Convert.ChangeType(value, typeof(T));
         }
 
         /// <summary>
-        /// Converts <see cref="KeyValueConfigurationCollection"/> to the list.
+        /// Converts <see cref="KeyValueConfigurationCollection" /> to the list.
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <returns>The list.</returns>
@@ -61,12 +74,12 @@ namespace Gucu112.ConfigurationHelper.Extensions
             {
                 return new List<string>();
             }
-            return collection.AllKeys.Select
-                (key => collection.Get(key)).ToList();
+
+            return collection.AllKeys.Select(key => collection.Get(key)).ToList();
         }
 
         /// <summary>
-        /// Converts <see cref="KeyValueConfigurationCollection"/> to the dictionary.
+        /// Converts <see cref="KeyValueConfigurationCollection" /> to the dictionary.
         /// </summary>
         /// <param name="collection">The collection.</param>
         /// <returns>The dictionary.</returns>
@@ -76,8 +89,8 @@ namespace Gucu112.ConfigurationHelper.Extensions
             {
                 return new Dictionary<string, string>();
             }
-            return collection.AllKeys.ToDictionary
-                (key => key, key => collection.Get(key));
+
+            return collection.AllKeys.ToDictionary(key => key, key => collection.Get(key));
         }
 
         #endregion
@@ -99,11 +112,13 @@ namespace Gucu112.ConfigurationHelper.Extensions
             {
                 return false;
             }
+
             // Cannot change type if not convertible
             if (value as IConvertible == null)
             {
                 return false;
             }
+
             return true;
         }
 

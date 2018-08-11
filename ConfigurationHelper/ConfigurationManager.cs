@@ -1,8 +1,19 @@
-﻿using Gucu112.ConfigurationHelper.Sections.AppData;
-using System.Configuration;
+﻿//-----------------------------------------------------------------------------------
+// <copyright file="ConfigurationManager.cs" company="Gucu112">
+//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+// </copyright>
+// <author>Bartlomiej Roszczypala</author>
+//-----------------------------------------------------------------------------------
 
 namespace Gucu112.ConfigurationHelper
 {
+    using System.Configuration;
+    using Gucu112.ConfigurationHelper.Sections.AppData;
+
+    /// <summary>
+    /// Provides access to configuration file for application.
+    /// This class cannot be inherited.
+    /// </summary>
     public static class ConfigurationManager
     {
         #region Private fields
@@ -17,18 +28,20 @@ namespace Gucu112.ConfigurationHelper
         #region Static constructor
 
         /// <summary>
-        /// Initializes the <see cref="ConfigurationManager"/> class.
+        /// Initializes static members of the <see cref="ConfigurationManager" /> class.
         /// </summary>
         static ConfigurationManager()
         {
             configuration = System.Configuration.ConfigurationManager
                 .OpenExeConfiguration(ConfigurationUserLevel.None);
             AppSettingsSection = configuration.AppSettings;
+            ConnectionStringsSection = configuration.ConnectionStrings;
+            ServerSettingsSection = (AppSettingsSection)configuration
+                .GetSection("serverSettings");
             DataSettingsSection = (AppSettingsSection)configuration
                 .GetSection("dataSettings");
             AppDataSection = (AppDataSection)configuration
                 .GetSection("appData");
-            ConnectionStringsSection = configuration.ConnectionStrings;
         }
 
         #endregion
@@ -52,6 +65,44 @@ namespace Gucu112.ConfigurationHelper
         public static ConfigurationSettingsCollection AppSettings
         {
             get => new ConfigurationSettingsCollection(AppSettingsSection?.Settings);
+        }
+
+        /// <summary>
+        /// Gets the connection strings section.
+        /// </summary>
+        /// <value>
+        /// The connection strings section.
+        /// </value>
+        public static ConnectionStringsSection ConnectionStringsSection { get; private set; }
+
+        /// <summary>
+        /// Gets the connection strings.
+        /// </summary>
+        /// <value>
+        /// The connection strings collection.
+        /// </value>
+        public static ConnectionStringSettingsCollection ConnectionStrings
+        {
+            get => ConnectionStringsSection?.ConnectionStrings;
+        }
+
+        /// <summary>
+        /// Gets the server settings section.
+        /// </summary>
+        /// <value>
+        /// The server settings section.
+        /// </value>
+        public static AppSettingsSection ServerSettingsSection { get; private set; }
+
+        /// <summary>
+        /// Gets the server settings.
+        /// </summary>
+        /// <value>
+        /// The server settings as the key/value collection.
+        /// </value>
+        public static ConfigurationSettingsCollection ServerSettings
+        {
+            get => new ConfigurationSettingsCollection(ServerSettingsSection?.Settings);
         }
 
         /// <summary>
@@ -90,25 +141,6 @@ namespace Gucu112.ConfigurationHelper
         public static ConfigurationSettingsCollection AppData
         {
             get => new ConfigurationSettingsCollection(AppDataSection?.Settings);
-        }
-
-        /// <summary>
-        /// Gets the connection strings section.
-        /// </summary>
-        /// <value>
-        /// The connection strings section.
-        /// </value>
-        public static ConnectionStringsSection ConnectionStringsSection { get; private set; }
-
-        /// <summary>
-        /// Gets the connection strings.
-        /// </summary>
-        /// <value>
-        /// The connection strings collection.
-        /// </value>
-        public static ConnectionStringSettingsCollection ConnectionStrings
-        {
-            get => ConnectionStringsSection?.ConnectionStrings;
         }
 
         #endregion
