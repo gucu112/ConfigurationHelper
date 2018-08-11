@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3BBDB3B3-7108-4772-940D-0B74CD65E41D}"
 	ProjectSection(SolutionItems) = preProject
 		ConfigurationHelper\ConfigurationHelper.nuspec = ConfigurationHelper\ConfigurationHelper.nuspec
+		ConfigurationHelperDeploy.bat = ConfigurationHelperDeploy.bat
 		ConfigurationHelperIcon.svg = ConfigurationHelperIcon.svg
 		LICENSE = LICENSE
 		README.md = README.md
