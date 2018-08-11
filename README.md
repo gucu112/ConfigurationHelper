@@ -1,8 +1,9 @@
 # ConfigurationHelper
 
-![ConfigurationHelper](ConfigurationHelperIcon.svg){ width="256px" style="display: block; margin: 0 auto" }
-
-Extended configuration library for .NET framework.
+<p align="center">
+    <img src="ConfigurationHelperIcon.svg" alt="ConfigurationHelper" width="256" height="256" />
+    <br /><strong>Extended configuration library for .NET framework.</strong>
+</p>
 
 ## Key Features
 
@@ -84,6 +85,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - v0.5.2
   - Feature: ConfigurationHelperDeploy batch file
+  - Fix: Image size and positioning for GitHub README.md file
   - Updates README.md
   - Updates *.nuspec icon file path
   - Updates assembly version
