@@ -1,6 +1,6 @@
 # ConfigurationHelper
 
-![ConfigurationHelper](ConfigurationHelperIcon.svg)
+![ConfigurationHelper](ConfigurationHelperIcon.svg){ width="256px" style="display: block; margin: 0 auto" }
 
 Extended configuration library for .NET framework.
 
@@ -81,6 +81,12 @@ See also the list of [contributors](https://github.com/Gucu112/ConfigurationHelp
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Changelog
+
+- v0.5.2
+  - Feature: ConfigurationHelperDeploy batch file
+  - Updates README.md
+  - Updates *.nuspec icon file path
+  - Updates assembly version
 
 - v0.5.1
   - Feature: ServerSettings section

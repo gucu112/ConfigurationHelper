@@ -8,7 +8,7 @@
     <owners>$author$</owners>
     <licenseUrl>https://github.com/gucu112/ConfigurationHelper/raw/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/gucu112/ConfigurationHelper</projectUrl>
-    <iconUrl>https://cdn.rawgit.com/gucu112/ConfigurationHelper/ef9b2025/ConfigurationHelperIcon.svg</iconUrl>
+    <iconUrl>https://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg?sanitize=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright (c) Gucu112 2017-2018 Bartlomiej Roszczypala</copyright>
