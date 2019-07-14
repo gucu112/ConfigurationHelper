@@ -12,7 +12,6 @@ namespace ConfigurationHelper.Test
     using System.Configuration;
     using System.Linq;
     using System.Reflection;
-    using Gucu112.ConfigurationHelper.Extensions;
     using Gucu112.ConfigurationHelper.Sections.AppData;
     using Xunit;
 
@@ -150,10 +149,12 @@ namespace ConfigurationHelper.Test
             }
             else
             {
-                MethodInfo privateMethodCanChangeType = typeof(KeyValueConfigurationCollectionExtensions)
-                    .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Static);
-                bool canChangeValue = (bool)privateMethodCanChangeType.Invoke(null, new object[] { value, type });
-                Assert.True(canChangeValue);
+                MethodInfo privateMethodCanChangeType = typeof(Gucu112.ConfigurationHelper.ConfigurationSettingsCollection)
+                    .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Instance);
+                bool canChangeTypeResultValue = (bool)privateMethodCanChangeType.Invoke(
+                    new Gucu112.ConfigurationHelper.ConfigurationSettingsCollection(),
+                    new object[] { value, type });
+                Assert.True(canChangeTypeResultValue);
             }
         }
 

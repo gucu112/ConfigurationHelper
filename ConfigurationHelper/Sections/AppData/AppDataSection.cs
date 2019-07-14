@@ -40,7 +40,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </value>
         public KeyValueConfigurationCollection Settings
         {
-            get => (KeyValueConfigurationCollection)this.Collection;
+            get => (KeyValueConfigurationCollection)Collection;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<string> GetList(string key)
         {
-            if (!(this.Collection[key] is AppDataCollection collection))
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new List<string>();
             }
@@ -70,7 +70,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IList<T> GetList<T>(string key)
         {
-            if (!(this.Collection[key] is AppDataCollection collection))
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new List<T>();
             }
@@ -87,7 +87,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, string> GetDictionary(string key)
         {
-            if (!(this.Collection[key] is AppDataCollection collection))
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, string>();
             }
@@ -105,7 +105,7 @@ namespace Gucu112.ConfigurationHelper.Sections.AppData
         /// </returns>
         public IDictionary<string, T> GetDictionary<T>(string key)
         {
-            if (!(this.Collection[key] is AppDataCollection collection))
+            if (!(Collection[key] is AppDataCollection collection))
             {
                 return new Dictionary<string, T>();
             }

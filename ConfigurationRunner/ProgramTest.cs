@@ -13,7 +13,6 @@ namespace ConfigurationHelper.Test
     using System.Linq;
     using System.Threading;
     using Gucu112.ConfigurationHelper;
-    using Gucu112.ConfigurationHelper.Extensions;
     using Xunit;
 
     /// <summary>
@@ -65,9 +64,11 @@ namespace ConfigurationHelper.Test
         [InlineData(typeof(long), "TestLong", 4294967296)]
         public void AppSettingsGenericTest(Type type, string key, object value)
         {
-            object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
+            object convertedValue = typeof(ConfigurationSettingsCollection)
                 .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
-                .MakeGenericMethod(type).Invoke(null, new object[] { ConfigurationManager.AppSettings, key });
+                .MakeGenericMethod(type).Invoke(
+                    ConfigurationManager.AppSettings,
+                    new object[] { key });
             Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 
@@ -128,9 +129,11 @@ namespace ConfigurationHelper.Test
         [InlineData(typeof(long), "DataLong", -4294967296)]
         public void DataSettingsGenericTest(Type type, string key, object value)
         {
-            object convertedValue = typeof(KeyValueConfigurationCollectionExtensions)
+            object convertedValue = typeof(ConfigurationSettingsCollection)
                 .GetMethods().Single(method => method.Name == "Get" && method.IsGenericMethod)
-                .MakeGenericMethod(type).Invoke(null, new object[] { ConfigurationManager.DataSettings, key });
+                .MakeGenericMethod(type).Invoke(
+                    ConfigurationManager.DataSettings,
+                    new object[] { key });
             Assert.Equal(Convert.ChangeType(value, type), convertedValue);
         }
 

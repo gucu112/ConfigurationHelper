@@ -11,7 +11,7 @@
     <iconUrl>https://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg?sanitize=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright (c) Gucu112 2017-2018 Bartlomiej Roszczypala</copyright>
+    <copyright>Copyright (c) Gucu112 2017-2019 Bartlomiej Roszczypala</copyright>
     <tags>config configuration configuration-management csharp dotnet dot-net</tags>
   </metadata>
 </package>

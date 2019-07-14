@@ -9,7 +9,6 @@ namespace Gucu112.ConfigurationHelper.Runner
 {
     using System.Globalization;
     using System.Threading;
-    using Gucu112.ConfigurationHelper.Extensions;
 
     /// <summary>
     /// Represents console program.

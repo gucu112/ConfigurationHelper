@@ -83,6 +83,12 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+- v0.5.3
+  - Moves KeyValueConfigurationExtensions into ConfigurationSettingsCollection
+  - Updates README.md
+  - Updates year in *.nuspec and LICENSE file
+  - Updates assemblies info
+
 - v0.5.2
   - Feature: ConfigurationHelperDeploy batch file
   - Fix: Image size and positioning for GitHub README.md file

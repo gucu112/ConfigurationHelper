@@ -1,3 +1,7 @@
+:CheckoutAndPullMaster
+git checkout master
+git pull origin master
+
 @ECHO OFF
 CD releases
 @ECHO ON
