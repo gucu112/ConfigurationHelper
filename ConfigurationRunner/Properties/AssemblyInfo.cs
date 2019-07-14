@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Gucu112.ConfigurationHelper.Runner")]
-[assembly: AssemblyCopyright("Copyright © Gucu112 2017-2018")]
+[assembly: AssemblyCopyright("Copyright © Gucu112 2017-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

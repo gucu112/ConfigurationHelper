@@ -12,7 +12,6 @@ namespace Gucu112.ConfigurationHelper.Runner
     using System.Data;
     using System.Data.SqlClient;
     using System.Linq;
-    using Gucu112.ConfigurationHelper.Extensions;
 
     /// <summary>
     /// Contains console program example functions.
