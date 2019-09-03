@@ -136,7 +136,7 @@ namespace ConfigurationHelper.Test
         [Theory]
         [MemberData(nameof(ConfigurationManagerTestData.BuiltInTypes),
             MemberType = typeof(ConfigurationManagerTestData))]
-        public void CanChangeTypeTest(Type type, object value)
+        public void IsTypeConvertionPossibleTest(Type type, object value)
         {
             if (value == null)
             {
@@ -149,12 +149,12 @@ namespace ConfigurationHelper.Test
             }
             else
             {
-                MethodInfo privateMethodCanChangeType = typeof(Gucu112.ConfigurationHelper.ConfigurationSettingsCollection)
-                    .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Instance);
-                bool canChangeTypeResultValue = (bool)privateMethodCanChangeType.Invoke(
+                MethodInfo isTypeConvertionPossiblePrivateMethod = typeof(Gucu112.ConfigurationHelper.ConfigurationSettingsCollection)
+                    .GetMethod("IsTypeConvertionPossible", BindingFlags.NonPublic | BindingFlags.Instance);
+                bool isTypeConvertionPossibleMethodResultValue = (bool)isTypeConvertionPossiblePrivateMethod.Invoke(
                     new Gucu112.ConfigurationHelper.ConfigurationSettingsCollection(),
                     new object[] { value, type });
-                Assert.True(canChangeTypeResultValue);
+                Assert.True(isTypeConvertionPossibleMethodResultValue);
             }
         }
 

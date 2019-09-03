@@ -11,6 +11,7 @@ namespace ConfigurationHelper.Test
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
     using Gucu112.ConfigurationHelper;
     using Xunit;
@@ -70,6 +71,49 @@ namespace ConfigurationHelper.Test
                     ConfigurationManager.AppSettings,
                     new object[] { key });
             Assert.Equal(Convert.ChangeType(value, type), convertedValue);
+        }
+
+        /// <summary>
+        /// Tests the applications settings object against key values which equals environment variables.
+        /// </summary>
+        /// <param name="key">The configuration key.</param>
+        [Theory]
+        [InlineData("TestEnvVarEqual")]
+        [InlineData("TestEnvVarIgnoreCase")]
+        [InlineData("TestEnvVarUppercase")]
+        public void AppSettingsEqualEnvironmetVariableKeyTest(string key)
+        {
+            string expandedValue = Environment.ExpandEnvironmentVariables(
+                ConfigurationManager.AppSettings[key]);
+
+            string environmentVariableName = expandedValue.Trim('%');
+
+            if (environmentVariableName.Contains('_'))
+            {
+                string transformedKey = (string)typeof(ConfigurationSettingsCollection)
+                    .GetMethod("TransformKeyValueToSnakeCase", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Invoke(new ConfigurationSettingsCollection(), new object[] { key });
+
+                Assert.Equal(transformedKey, environmentVariableName, true);
+            }
+            else
+            {
+                Assert.Equal(key, environmentVariableName, true);
+            }
+
+            Assert.Null(ConfigurationManager.AppSettings.Get(key));
+        }
+
+        /// <summary>
+        /// Tests the applications settings object against empty environment variable.
+        /// </summary>
+        [Fact]
+        public void AppSettingsNotEqualEnvironmetVariableKeyTest()
+        {
+            string expandedValue = Environment.ExpandEnvironmentVariables(
+                ConfigurationManager.AppSettings["TestEnvVarNotExisting"]);
+            Assert.Equal("%NotExistingEnvVar%", expandedValue);
+            Assert.Equal("%NotExistingEnvVar%", ConfigurationManager.AppSettings.Get("TestEnvVarNotExisting"));
         }
 
         /// <summary>

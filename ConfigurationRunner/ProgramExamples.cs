@@ -30,6 +30,19 @@ namespace Gucu112.ConfigurationHelper.Runner
         }
 
         /// <summary>
+        /// Gets the configuration settings for special cases when <c>null</c> is returned.
+        /// </summary>
+        public static void GetConfigNullSetting()
+        {
+            string equal = ConfigurationManager.AppSettings.Get("TestEnvVarEqual");
+            Console.WriteLine(equal ?? "null");
+            string ignoreCase = ConfigurationManager.AppSettings.Get("TestEnvVarIgnoreCase");
+            Console.WriteLine(ignoreCase ?? "null");
+            string snakeCase = ConfigurationManager.AppSettings.Get("TestEnvVarUppercase");
+            Console.WriteLine(snakeCase ?? "null");
+        }
+
+        /// <summary>
         /// Establishes connection to the database.
         /// </summary>
         public static void DatabaseConnection()

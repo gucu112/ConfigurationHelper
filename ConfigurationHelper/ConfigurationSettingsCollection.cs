@@ -11,6 +11,7 @@ namespace Gucu112.ConfigurationHelper
     using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Represents a configuration element containing a collection of configuration settings.
@@ -85,7 +86,15 @@ namespace Gucu112.ConfigurationHelper
                 throw new ArgumentException($"Configuration value for '{key}' key does not exists.", "key");
             }
 
-            return Environment.ExpandEnvironmentVariables(this[key]);
+            string expandedValue = Environment.ExpandEnvironmentVariables(this[key]);
+
+            if (IsConfigurationKeyValuePairEmpty(
+                new KeyValuePair<string, string>(key, expandedValue)))
+            {
+                return null;
+            }
+
+            return expandedValue;
         }
 
         /// <summary>
@@ -99,7 +108,7 @@ namespace Gucu112.ConfigurationHelper
         public T Get<T>(string key)
         {
             string value = Get(key);
-            if (!CanChangeType(value, typeof(T)))
+            if (!IsTypeConvertionPossible(value, typeof(T)))
             {
                 throw new Exception($"Cannot convert to '{typeof(T).ToString()}' type.");
             }
@@ -137,7 +146,7 @@ namespace Gucu112.ConfigurationHelper
         /// <returns>
         ///   <c>true</c> if the value can be converted; otherwise, <c>false</c>.
         /// </returns>
-        private bool CanChangeType(object value, Type type)
+        private bool IsTypeConvertionPossible(object value, Type type)
         {
             // Cannot change type if arguments are empty
             if (value == null || type == null)
@@ -152,6 +161,43 @@ namespace Gucu112.ConfigurationHelper
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Checks whether configuration key/value pair is empty and should return <c>null</c>.
+        /// </summary>
+        /// <param name="item">The expected key and expanded value pair.</param>
+        /// <returns>
+        ///   <c>true</c> if value is empty; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsConfigurationKeyValuePairEmpty(KeyValuePair<string, string> item)
+        {
+            // Value is not empty if not fully an environment varialble
+            if (!item.Value.StartsWith("%") || !item.Value.EndsWith("%"))
+            {
+                return false;
+            }
+
+            // Value is empty if equals to environment variable name (also as snake case string)
+            return item.Key.ToLowerInvariant() == item.Value.Trim('%').ToLowerInvariant()
+                || TransformKeyValueToSnakeCase(item.Key) == item.Value.Trim('%').ToUpperInvariant();
+        }
+
+        /// <summary>
+        /// Transforms key value using snake case variable naming convention.
+        /// </summary>
+        /// <example>
+        ///     Transforms key value like this:
+        ///     SnakeCaseUppercaseExample
+        ///     into this:
+        ///     SNAKE_CASE_UPPERCASE_EXAMPLE
+        /// </example>
+        /// <param name="key">The key value for transformation.</param>
+        /// <returns>The uppercase key value as a snake case string.</returns>
+        private string TransformKeyValueToSnakeCase(string key)
+        {
+            return new Regex(@"((?:[a-zA-Z0-9][a-z0-9]+)|(?:[A-Z0-9]+))")
+                .Replace(key, "_$1").TrimStart('_').ToUpperInvariant();
         }
 
         #endregion

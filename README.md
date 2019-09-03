@@ -37,6 +37,20 @@ You can use environment variables in you configuration file like this:
 </appSettings>
 ```
 
+In case if your key value for the entry will be equal to the environment variable name:
+```xml
+<appSettings>
+    <add key="CaseSensitivityIsIgnored" value="%caseSensItIvItyIsIGNORED%" />
+    <add key="SnakeCaseStyleIsAlsoSupported" value="%SNAKE_CASE_STYLE_IS_ALSO_SUPPORTED%" />
+</appSettings>
+```
+
+This will be automatically resolved as `null` return value:
+```csharp
+Assert.Null(ConfigurationManager.AppSettings.Get("CaseSensitivityIsIgnored"));
+Assert.Null(ConfigurationManager.AppSettings.Get("SnakeCaseStyleIsAlsoSupported"));
+```
+
 Generic version of `Get<T>()` function automatically casts the value specified by configuration key:
 ```csharp
 // Get casted value (can be stored in environment variables as well)
@@ -83,6 +97,14 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+- v0.5.4
+  - Special check whether null should be returned for environment variable
+  - Updates acceptance tests
+  - Added test data in App.config file
+  - Updates examples in ConfigurationRunner
+  - Refactor functions and variables names
+  - Updates README.md
+
 - v0.5.3
   - Moves KeyValueConfigurationExtensions into ConfigurationSettingsCollection
   - Updates README.md
@@ -103,7 +125,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
   - Changes class names in ConfigurationHelperTest
   - Changes in configuration file
   - Removes AssemblyReleaseNotesAttribute class
-  - Updates unit & acceptance tests 
+  - Updates unit & acceptance tests
   - Updates README.md
   - Updates *.nuspec file
   - Updates icon file

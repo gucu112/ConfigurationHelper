@@ -28,6 +28,7 @@ namespace Gucu112.ConfigurationHelper.Runner
 
             // Run program examples
             ProgramExamples.GetConfigSetting();
+            ProgramExamples.GetConfigNullSetting();
             ProgramExamples.DatabaseConnection();
             ProgramExamples.GetSecureShellAddress();
             ProgramExamples.GetByteCodeKey();
