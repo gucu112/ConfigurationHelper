@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------------------
 // <copyright file="ProgramExamples.cs" company="Gucu112">
-//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+//     Copyright (c) Gucu112 2017-2019. All rights reserved.
 // </copyright>
 // <author>Bartlomiej Roszczypala</author>
 //-----------------------------------------------------------------------------------
@@ -27,6 +27,19 @@ namespace Gucu112.ConfigurationHelper.Runner
         {
             string test = ConfigurationManager.AppSettings["TestString"];
             Console.WriteLine(test);
+        }
+
+        /// <summary>
+        /// Gets the configuration settings for special cases when <c>null</c> is returned.
+        /// </summary>
+        public static void GetConfigNullSetting()
+        {
+            string equal = ConfigurationManager.AppSettings.Get("TestEnvVarEqual");
+            Console.WriteLine(equal ?? "null");
+            string ignoreCase = ConfigurationManager.AppSettings.Get("TestEnvVarIgnoreCase");
+            Console.WriteLine(ignoreCase ?? "null");
+            string snakeCase = ConfigurationManager.AppSettings.Get("TestEnvVarUppercase");
+            Console.WriteLine(snakeCase ?? "null");
         }
 
         /// <summary>

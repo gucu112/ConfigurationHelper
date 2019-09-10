@@ -1,11 +1,11 @@
 ﻿//-----------------------------------------------------------------------------------
 // <copyright file="ConfigurationManagerTest.cs" company="Gucu112">
-//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+//     Copyright (c) Gucu112 2017-2019. All rights reserved.
 // </copyright>
 // <author>Bartlomiej Roszczypala</author>
 //-----------------------------------------------------------------------------------
 
-namespace ConfigurationHelper.Test
+namespace Gucu112.ConfigurationHelper.Test
 {
     using System;
     using System.Collections.Generic;
@@ -16,19 +16,19 @@ namespace ConfigurationHelper.Test
     using Xunit;
 
     /// <summary>
-    /// Tests the <see cref="Gucu112.ConfigurationHelper.ConfigurationManager" /> class.
+    /// Tests the <see cref="ConfigurationHelper.ConfigurationManager" /> class.
     /// </summary>
     public class ConfigurationManagerTest
     {
         #region Public methods
 
         /// <summary>
-        /// Tests the applications settings object.
+        /// Tests the application settings object.
         /// </summary>
         [Fact]
         public void AppSettingsTest()
         {
-            foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.AppSettings.ToDictionary())
+            foreach (KeyValuePair<string, string> element in ConfigurationHelper.ConfigurationManager.AppSettings.ToDictionary())
             {
                 Assert.Equal(
                     ConfigurationManager.AppSettings[element.Key],
@@ -44,7 +44,7 @@ namespace ConfigurationHelper.Test
         {
             Assert.Equal(
                 ConfigurationManager.ConnectionStrings,
-                Gucu112.ConfigurationHelper.ConfigurationManager.ConnectionStrings);
+                ConfigurationHelper.ConfigurationManager.ConnectionStrings);
         }
 
         /// <summary>
@@ -57,15 +57,15 @@ namespace ConfigurationHelper.Test
                 ConfigurationManager.GetSection("serverSettings"))?.Settings;
             if (configurationManagerServerSettings == null)
             {
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.ServerSettings.ToList());
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.ServerSettings.ToDictionary());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.ServerSettings.ToList());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.ServerSettings.ToDictionary());
             }
             else
             {
                 Assert.Equal(
                     configurationManagerServerSettings.AllKeys.Select(key => configurationManagerServerSettings[key].Value).ToList(),
-                    Gucu112.ConfigurationHelper.ConfigurationManager.ServerSettings.ToList());
-                foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.ServerSettings.ToDictionary())
+                    ConfigurationHelper.ConfigurationManager.ServerSettings.ToList());
+                foreach (KeyValuePair<string, string> element in ConfigurationHelper.ConfigurationManager.ServerSettings.ToDictionary())
                 {
                     Assert.Equal(
                         configurationManagerServerSettings[element.Key].Value,
@@ -84,15 +84,15 @@ namespace ConfigurationHelper.Test
                 ConfigurationManager.GetSection("dataSettings"))?.Settings;
             if (configurationManagerDataSettings == null)
             {
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary());
             }
             else
             {
                 Assert.Equal(
                     configurationManagerDataSettings.AllKeys.Select(key => configurationManagerDataSettings[key].Value).ToList(),
-                    Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
-                foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary())
+                    ConfigurationHelper.ConfigurationManager.DataSettings.ToList());
+                foreach (KeyValuePair<string, string> element in ConfigurationHelper.ConfigurationManager.DataSettings.ToDictionary())
                 {
                     Assert.Equal(
                         configurationManagerDataSettings[element.Key].Value,
@@ -111,15 +111,15 @@ namespace ConfigurationHelper.Test
                 ConfigurationManager.GetSection("appData"))?.Settings;
             if (configurationManagerAppData == null)
             {
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToList());
-                Assert.Empty(Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToDictionary());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.AppData.ToList());
+                Assert.Empty(ConfigurationHelper.ConfigurationManager.AppData.ToDictionary());
             }
             else
             {
                 Assert.Equal(
                     configurationManagerAppData.AllKeys.Select(key => configurationManagerAppData[key].Value).ToList(),
-                    Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToList());
-                foreach (KeyValuePair<string, string> element in Gucu112.ConfigurationHelper.ConfigurationManager.AppData.ToDictionary())
+                    ConfigurationHelper.ConfigurationManager.AppData.ToList());
+                foreach (KeyValuePair<string, string> element in ConfigurationHelper.ConfigurationManager.AppData.ToDictionary())
                 {
                     Assert.Equal(
                         configurationManagerAppData[element.Key].Value,
@@ -136,7 +136,7 @@ namespace ConfigurationHelper.Test
         [Theory]
         [MemberData(nameof(ConfigurationManagerTestData.BuiltInTypes),
             MemberType = typeof(ConfigurationManagerTestData))]
-        public void CanChangeTypeTest(Type type, object value)
+        public void IsTypeConvertionPossibleTest(Type type, object value)
         {
             if (value == null)
             {
@@ -149,12 +149,12 @@ namespace ConfigurationHelper.Test
             }
             else
             {
-                MethodInfo privateMethodCanChangeType = typeof(Gucu112.ConfigurationHelper.ConfigurationSettingsCollection)
-                    .GetMethod("CanChangeType", BindingFlags.NonPublic | BindingFlags.Instance);
-                bool canChangeTypeResultValue = (bool)privateMethodCanChangeType.Invoke(
-                    new Gucu112.ConfigurationHelper.ConfigurationSettingsCollection(),
+                MethodInfo isTypeConvertionPossiblePrivateMethod = typeof(ConfigurationSettingsCollection)
+                    .GetMethod("IsTypeConvertionPossible", BindingFlags.NonPublic | BindingFlags.Instance);
+                bool isTypeConvertionPossibleMethodResultValue = (bool)isTypeConvertionPossiblePrivateMethod.Invoke(
+                    new ConfigurationSettingsCollection(),
                     new object[] { value, type });
-                Assert.True(canChangeTypeResultValue);
+                Assert.True(isTypeConvertionPossibleMethodResultValue);
             }
         }
 
