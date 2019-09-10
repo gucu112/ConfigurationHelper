@@ -9,7 +9,7 @@
 
 - No third-party dependencies, only `System.Configuration` reference is used,
 - Replaces default `ConfigurationManager` static class,
-- Extends `KeyValueConfigurationCollection` in order to get casted values expanded by environment variables,
+- Extends `KeyValueConfigurationCollection` in order to get casted values (including enums) expanded by environment variables,
 - Standard `AppSettings` and `ConnectionStrings` properties available with extended behavior,
 - Possibility to use additional section `<dataSettings>` implemented as `AppSettingsSection` class,
 - Adds brand new `<appData>` section implemented as `AppDataSecion` which can store `List`s and `Dictionary`ies,
@@ -21,6 +21,8 @@ The ready to use library (stable release build) can be downloaded via NuGet pack
 
 ## Code Examples
 
+##### Configuration entry gathering
+
 Library can be used for acquiring configuration data using standard syntax or function `Get()` as follows:
 ```csharp
 // Get string value using standard syntax (not extended by environment variables)
@@ -30,6 +32,10 @@ string lang = ConfigurationManager.AppSettings["Language"];
 string env = ConfigurationManager.AppSettings.Get("ApplicationEnvironment");
 ```
 
+In case if you use 2nd option then the configuration entry result value will be expanded by environment variables.
+
+##### Environment variables usage
+
 You can use environment variables in you configuration file like this:
 ```xml
 <appSettings>
@@ -37,7 +43,7 @@ You can use environment variables in you configuration file like this:
 </appSettings>
 ```
 
-In case if your key value for the entry will be equal to the environment variable name:
+In case if your key value for the configuration entry will be equal to the environment variable name:
 ```xml
 <appSettings>
     <add key="CaseSensitivityIsIgnored" value="%caseSensItIvItyIsIGNORED%" />
@@ -45,17 +51,40 @@ In case if your key value for the entry will be equal to the environment variabl
 </appSettings>
 ```
 
-This will be automatically resolved as `null` return value:
+Then it will be automatically resolved as `null` return value:
 ```csharp
 Assert.Null(ConfigurationManager.AppSettings.Get("CaseSensitivityIsIgnored"));
 Assert.Null(ConfigurationManager.AppSettings.Get("SnakeCaseStyleIsAlsoSupported"));
 ```
 
-Generic version of `Get<T>()` function automatically casts the value specified by configuration key:
+##### Generic gathering function
+
+Generic version of `Get<T>()` function automatically casts the value specified by a configuration key:
 ```csharp
-// Get casted value (can be stored in environment variables as well)
 float limit = ConfigurationManager.DataSettings.Get<float>("CapacityLimit");
 ```
+
+As well as regular types also enums can be automatically casted based on string or numeric value:
+```csharp
+public enum Place
+{
+    First = 1,
+    Second = 2,
+    Third = 3
+}
+```
+```xml
+<appSettings>
+    <add key="Winner" value="First" />
+    <add key="LastPlace" value="3" />
+</appSettings>
+```
+```csharp
+Assert.Equal(Place.First, ConfigurationManager.AppSettings.Get<Place>("Winner"));
+Assert.Equal(Place.LastPlace, ConfigurationManager.AppSettings.Get<Place>("LastPlace"));
+```
+
+##### Additional configuration sections
 
 Except default configuration section you can use additional ones defined at the beginning of your `App.config` file:
 ```xml
@@ -99,11 +128,17 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - v0.5.4
   - Special check whether null should be returned for environment variable
+  - Enum conversion feature
   - Updates acceptance tests
   - Added test data in App.config file
   - Updates examples in ConfigurationRunner
+  - Updates documentation
+  - Updates namespace names
   - Refactor functions and variables names
+  - Simplify member access
   - Updates README.md
+  - Updates year in files header
+  - Updates assembly version
 
 - v0.5.3
   - Moves KeyValueConfigurationExtensions into ConfigurationSettingsCollection

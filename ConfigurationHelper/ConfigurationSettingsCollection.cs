@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------------------
 // <copyright file="ConfigurationSettingsCollection.cs" company="Gucu112">
-//     Copyright (c) Gucu112 2017-2018. All rights reserved.
+//     Copyright (c) Gucu112 2017-2019. All rights reserved.
 // </copyright>
 // <author>Bartlomiej Roszczypala</author>
 //-----------------------------------------------------------------------------------
@@ -98,19 +98,35 @@ namespace Gucu112.ConfigurationHelper
         }
 
         /// <summary>
-        /// Gets the value for the specified key casted to the provided type.
+        /// Gets the value for the specified key casted to the provided type or enum.
         /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
+        /// <typeparam name="T">The type or the enum.</typeparam>
         /// <param name="key">The key.</param>
         /// <returns>The value.</returns>
         /// <exception cref="ArgumentException">key - Configuration value for particular key does not exists.</exception>
-        /// <exception cref="Exception">Cannot convert to specified type.</exception>
+        /// <exception cref="InvalidOperationException">Cannot convert to specified type or enum.</exception>
         public T Get<T>(string key)
         {
             string value = Get(key);
             if (!IsTypeConvertionPossible(value, typeof(T)))
             {
-                throw new Exception($"Cannot convert to '{typeof(T).ToString()}' type.");
+                throw new InvalidOperationException($"Cannot convert to '{typeof(T).ToString()}' type.");
+            }
+
+            if (typeof(T).IsEnum)
+            {
+                if (int.TryParse(value, out int numericValue)
+                    && Enum.IsDefined(typeof(T), numericValue))
+                {
+                    return (T)Enum.ToObject(typeof(T), numericValue);
+                }
+
+                if (!typeof(T).IsEnumDefined(value))
+                {
+                    throw new InvalidOperationException($"Cannot convert to '{typeof(T).ToString()}' type. Enum '{value}' is not defined.");
+                }
+
+                return (T)Enum.Parse(typeof(T), value);
             }
 
             return (T)Convert.ChangeType(value, typeof(T));
@@ -152,6 +168,12 @@ namespace Gucu112.ConfigurationHelper
             if (value == null || type == null)
             {
                 return false;
+            }
+
+            // Can change type if it is enum
+            if (type.IsEnum)
+            {
+                return true;
             }
 
             // Cannot change type if not convertible
