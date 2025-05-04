@@ -126,6 +126,13 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Changelog
 
+- v1.0.0
+  - Upgrades to .NET Framework 4.8
+  - Updates README.md
+  - Updates *.nuspec file
+  - Updates assembly version
+  - Updates year where needed
+
 - v0.5.4
   - Special check whether null should be returned for environment variable
   - Enum conversion feature

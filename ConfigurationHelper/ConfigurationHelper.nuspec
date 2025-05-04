@@ -5,13 +5,12 @@
     <version>$version$</version>
     <title>$title$</title>
     <authors>$author$</authors>
-    <owners>$author$</owners>
-    <licenseUrl>https://github.com/gucu112/ConfigurationHelper/raw/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/gucu112/ConfigurationHelper</projectUrl>
-    <iconUrl>https://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg?sanitize=true</iconUrl>
+    <license>https://github.com/gucu112/ConfigurationHelper/raw/master/LICENSE</license>
+    <icon>https://github.com/gucu112/ConfigurationHelper/raw/master/ConfigurationHelperIcon.svg?sanitize=true</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright (c) Gucu112 2017-2019 Bartlomiej Roszczypala</copyright>
+    <copyright>Copyright (c) Gucu112 2017-2025 Bartlomiej Roszczypala</copyright>
     <tags>config configuration configuration-management csharp dotnet dot-net</tags>
   </metadata>
 </package>

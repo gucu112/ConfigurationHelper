@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------------------
 // <copyright file="AppDataElement.cs" company="Gucu112">
-//     Copyright (c) Gucu112 2017-2019. All rights reserved.
+//     Copyright (c) Gucu112 2017-2025. All rights reserved.
 // </copyright>
 // <author>Bartlomiej Roszczypala</author>
 //-----------------------------------------------------------------------------------
